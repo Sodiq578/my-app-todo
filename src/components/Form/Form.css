@@ -1,0 +1,198 @@
+/* Form container */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Form styling */
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .submit-button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* Malumot list styling */
+  .malumot-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .malumot-item {
+    position: relative;
+    background-color: #fafafa;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    position: absolute;
+    top: 0;
+    right: 20%; /* Adjust the right distance as needed */
+    padding: 10px;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+  }
+  
+  .delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+  }
+  
+  .delete-button {
+    background-color: #ea4335;
+  }
+  
+  /* Search bar styling */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .search-button,
+  .show-all-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  
+  /* Search results styling */
+  .search-results {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .search-result-item {
+    background-color: #e0e0e0;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Edit modal styling */
+  .edit-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+  }
+  
+  .save-button,
+  .cancel-button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .cancel-button {
+    background-color: #ea4335;
+  }
+  
+  /* Total sum styling */
+  .total-sum {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+  
+  /* Responsive media queries */
+  @media only screen and (max-width: 600px) {
+    .form-container {
+      max-width: 100%;
+    }
+  }
+  
+
+
+
+  /* Responsive media queries */
+@media only screen and (max-width: 600px) {
+    .form-container {
+      max-width: 100%;
+      padding: 10px; /* Adjust padding for smaller screens */
+    }
+  
+    .input {
+      font-size: 14px; /* Decrease font size for smaller screens */
+    }
+  
+    .submit-button,
+    .search-button,
+    .show-all-button,
+    .save-button,
+    .cancel-button {
+      font-size: 14px; /* Decrease font size for smaller screens */
+      padding: 8px; /* Adjust padding for smaller screens */
+    }
+  
+    .malumot-item,
+    .search-result-item,
+    .edit-modal {
+      padding: 8px; /* Adjust padding for smaller screens */
+    }
+  
+    .edit-button,
+    .delete-button {
+      padding: 8px;
+      font-size: 14px; /* Decrease font size for smaller screens */
+    }
+  
+    .search-bar {
+      margin-top: 10px; /* Adjust margin-top for smaller screens */
+    }
+  
+    .total-sum {
+      margin-top: 10px; /* Adjust margin-top for smaller screens */
+      font-size: 16px; /* Adjust font size for smaller screens */
+    }
+  }
+  
