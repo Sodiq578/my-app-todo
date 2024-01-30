@@ -1,3 +1,7 @@
+.title{
+    text-align: center;
+}
+
 /* Form container */
 .form-container {
     max-width: 600px;
