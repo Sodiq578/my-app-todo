@@ -3,17 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css';
 
-const saveToLocalStorage = (data) => {
-  localStorage.setItem('yourDataKey', JSON.stringify(data));
-};
-
-const loadFromLocalStorage = () => {
-  const storedData = JSON.parse(localStorage.getItem('yourDataKey')) || [];
-  return storedData;
-};
-
 const Home = () => {
-  const [data, setData] = useState(loadFromLocalStorage());
+  const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', summa: 0, userProvidedTime: '', returnedTime: '' });
@@ -21,14 +12,15 @@ const Home = () => {
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Load data from localStorage on component mount
   useEffect(() => {
-    // Load data from localStorage on component mount
-    setData(loadFromLocalStorage());
+    const storedData = JSON.parse(localStorage.getItem('yourDataKey')) || [];
+    setData(storedData);
   }, []);
 
   // Save data to localStorage whenever data changes
   useEffect(() => {
-    saveToLocalStorage(data);
+    localStorage.setItem('yourDataKey', JSON.stringify(data));
   }, [data]);
 
   const handleAdd = () => {
@@ -42,9 +34,7 @@ const Home = () => {
     } else {
       // Adding a new item
       const newId = data.length > 0 ? Math.max(...data.map(item => item.id)) + 1 : 1;
-      const newData = [...data, { id: newId, ...newItem }];
-      setData(newData);
-      saveToLocalStorage(newData); // Yangi malumot kiritilganda localStorage ga saqla
+      setData([...data, { id: newId, ...newItem }]);
     }
 
     // Close the modals
@@ -82,8 +72,8 @@ const Home = () => {
   const confirmDelete = () => {
     // Filter out the item with the specified id
     const updatedData = data.filter(item => item.id !== itemToDeleteId);
+    // Update the data state
     setData(updatedData);
-    saveToLocalStorage(updatedData); // Malumot o'chirilganda localStorage ga saqla
 
     // Close the delete confirmation modal
     setShowDeleteConfirmation(false);

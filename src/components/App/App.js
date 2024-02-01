@@ -1,14 +1,19 @@
 
 import '../../App.css';
-import { Form } from '../Form/Form';
+import Home from '../Home/Home';
+
+
 
 function App() {
   return (
     <div className="wrapper">
      <div className="container">
       <h1 className="title">Qarz-daftar</h1>
-      <Form />
+      <Home />
+    
+  
      </div>
+
     </div>
   );
 }
