@@ -1,20 +1,22 @@
+// App.js
 
-import '../../App.css';
-import Home from '../Home/Home';
-
-
+import React from "react";
+import {
+  Route,
+  Routes,
+} from "react-router-dom";
+// import Home from "./components/Home/Home";
+// import { Archive } from "./components/Archive/Archive";
+import "../App/App";
+import Home from "../Home/Home";
+import { Archive } from "../Archive/Archive";
 
 function App() {
   return (
-    <div className="wrapper">
-     <div className="container">
-      <h1 className="title">Qarz-daftar</h1>
-      <Home />
-    
-
-     </div>
-
-    </div>
+    <Routes>
+      <Route path="/" index element={<Home />} />
+      <Route path="/archive" element={<Archive />} />
+    </Routes>
   );
 }
 
