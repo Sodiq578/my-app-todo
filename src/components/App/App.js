@@ -11,7 +11,7 @@ function App() {
       <h1 className="title">Qarz-daftar</h1>
       <Home />
     
-  
+
      </div>
 
     </div>

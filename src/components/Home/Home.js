@@ -1,107 +1,99 @@
 // Home.js
 
-// React va useEffect o'zgaruvchilarini import qilib olish
+// Importing necessary libraries and styles
 import React, { useState, useEffect } from "react";
-// CSS faylini import qilib olish
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./Home.css";
 
-// Home funksiyasi
+// Home function
 const Home = () => {
-  // State lar
+  // State variables
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [newItem, setNewItem] = useState({
     name: "",
     summa: 0,
-    userProvidedTime: "",
-    returnedTime: "",
+    userProvidedTime: new Date(),
+    returnedTime: new Date(),
   });
   const [editingItemId, setEditingItemId] = useState(null);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Komponent mount bo'lganda local storage dan ma'lumotlarni olish
+  // Load data from local storage on component mount
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("yourDataKey")) || [];
     setData(storedData);
   }, []);
 
-  // Ma'lumotlar o'zgarganda local storage ga saqlash
+  // Save data to local storage when data changes
   useEffect(() => {
     localStorage.setItem("yourDataKey", JSON.stringify(data));
   }, [data]);
 
-  // Yangi item qo'shish
+  // Add or edit item
   const handleAdd = () => {
     if (editingItemId !== null) {
-      // Mavjud itemni tahrirlash
       const updatedData = data.map((item) =>
         item.id === editingItemId ? { ...item, ...newItem } : item
       );
       setData(updatedData);
       setEditingItemId(null);
     } else {
-      // Yangi item qo'shish
       const newId =
         data.length > 0 ? Math.max(...data.map((item) => item.id)) + 1 : 1;
       setData([...data, { id: newId, ...newItem }]);
     }
 
-    // Modallarni yopish
     setShowModal(false);
     setShowDeleteConfirmation(false);
 
-    // newItem state ni tozalash
-    setNewItem({ name: "", summa: 0, userProvidedTime: "", returnedTime: "" });
+    setNewItem({
+      name: "",
+      summa: 0,
+      userProvidedTime: new Date(),
+      returnedTime: new Date(),
+    });
   };
 
-  // Itemni tahrirlash
+  // Edit item
   const handleEdit = (id) => {
-    // Edit qilish kerakli itemni topish
     const itemToEdit = data.find((item) => item.id === id);
 
-    // Editing item ni o'rnatish va modal maydonlarini to'ldirish
     setEditingItemId(id);
     setNewItem({
       name: itemToEdit.name,
       summa: itemToEdit.summa,
-      userProvidedTime: itemToEdit.userProvidedTime,
-      returnedTime: itemToEdit.returnedTime,
+      userProvidedTime: new Date(itemToEdit.userProvidedTime),
+      returnedTime: new Date(itemToEdit.returnedTime),
     });
 
-    // Modalni ochish
     setShowModal(true);
   };
 
-  // Itemni o'chirish
+  // Delete item
   const handleDelete = (id) => {
-    // O'chiriladigan item id ni o'rnatish
     setItemToDeleteId(id);
-    // O'chirishni tasdiqlash modalini chiqarish
     setShowDeleteConfirmation(true);
   };
 
-  // O'chirishni tasdiqlash
+  // Confirm item deletion
   const confirmDelete = () => {
-    // Berilgan id ga teng bo'lgan itemni filtrlash
     const updatedData = data.filter((item) => item.id !== itemToDeleteId);
-    // Ma'lumotlar state ni yangilash
     setData(updatedData);
 
-    // O'chirishni tasdiqlash modalini yopish
     setShowDeleteConfirmation(false);
   };
 
-  // O'chirishni bekor qilish
+  // Cancel item deletion
   const cancelDelete = () => {
-    // O'chiriladigan item id ni qayta to'lash
     setItemToDeleteId(null);
-    // O'chirishni tasdiqlash modalini yopish
     setShowDeleteConfirmation(false);
   };
 
-  // Qidiruv inputidagi o'zgarishlar
+  // Handle search input changes
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
@@ -109,130 +101,69 @@ const Home = () => {
   return (
     <div className="container">
       <h1>Home</h1>
-
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Qidirish: "
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-        <button className="add-btn" onClick={() => setShowModal(true)}>
-          Add ➕
-        </button>
-      </div>
-
-      <table>
-        <thead>
+      <button onClick={() => setShowModal(true)}>Add</button>
+      <table className="rwd-table">
+        <tbody>
           <tr>
             <th>ID</th>
-            <th>Ism</th>
+            <th>Name</th>
             <th>Summa</th>
-            <th>Mijozga berilgan vaqt</th>
-            <th>Qaytariladigan vaqt</th>
-            <th>Actions</th>
+            <th>User Provided Time</th>
+            <th>Returned Time</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
-        </thead>
-        <tbody>
-          {data
-            .filter(
-              (item) =>
-                item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.summa.toString().includes(searchQuery) ||
-                item.userProvidedTime
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase()) ||
-                item.returnedTime
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-            )
-            .map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.summa}</td>
-                <td>{item.userProvidedTime}</td>
-                <td>{item.returnedTime}</td>
-                <td className="edit-delite-box">
-                  <button onClick={() => handleEdit(item.id)}>
-                    ✏️
-                  </button>
-                  <button onClick={() => handleDelete(item.id)}>
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
+          {data.map((item) => (
+            <tr key={item.id}>
+              <td data-th="ID">{item.id}</td>
+              <td data-th="Name">{item.name}</td>
+              <td data-th="Summa">{item.summa}</td>
+              <td data-th="User Provided Time">{item.userProvidedTime.toString()}</td>
+              <td data-th="Returned Time">{item.returnedTime.toString()}</td>
+              <td data-th="Edit">
+                <button onClick={() => handleEdit(item.id)}>Edit</button>
+              </td>
+              <td data-th="Delete">
+                <button onClick={() => handleDelete(item.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-            <label>Name: </label>
+            <span className="close" onClick={() => setShowModal(false)}>
+              &times;
+            </span>
+            <label>Name:</label>
             <input
               type="text"
               value={newItem.name}
               onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             />
-            <br />
-            <label>Summa: </label>
+            <label>Summa:</label>
             <input
               type="number"
               value={newItem.summa}
-              onChange={(e) =>
-                setNewItem({ ...newItem, summa: parseInt(e.target.value, 10) })
-              }
+              onChange={(e) => setNewItem({ ...newItem, summa: e.target.value })}
             />
-            <br />
-            <label>Mijozga berilgan vaqt: </label>
-            <input
-              type="text"
-              placeholder="Mijozga berilgan vaqt"
-              value={newItem.userProvidedTime}
-              onChange={(e) =>
-                setNewItem({ ...newItem, userProvidedTime: e.target.value })
-              }
+            <label>User Provided Time:</label>
+            <DatePicker
+              selected={newItem.userProvidedTime}
+              onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
             />
-            <br />
-            <label>Qaytariladigan vaqt: </label>
-            <input
-              type="text"
-              placeholder="Qaytariladigan vaqt"
-              value={newItem.returnedTime}
-              onChange={(e) =>
-                setNewItem({ ...newItem, returnedTime: e.target.value })
-              }
+            <label>Returned Time:</label>
+            <DatePicker
+              selected={newItem.returnedTime}
+              onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
             />
-            <br />
-            <div>
-              <button id="add-btn" className="add-btn" onClick={handleAdd}>
-                {editingItemId !== null ? "Edit ✏️" : "Add ➕"}
-              </button>
-              <button
-                id="cancel-btn"
-                className="cancel"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel ✖️
-              </button>
-            </div>
+            <button onClick={handleAdd}>Save</button>
           </div>
         </div>
       )}
-
-      {showDeleteConfirmation && (
-        <div className="delete-confirmation">
-          <div className="yes-no-box">
-              <p className="yes-no-box-title">Haqiqatan ham bu mijozni  oʻchirib tashlamoqchimisiz?</p>
-          <div>
-            <button className=" " onClick={confirmDelete}>Ha</button>
-            <button onClick={cancelDelete}>Yo'q</button>
-          </div>
-          </div>
-        </div>
-      )}
+      {/* ... (rest of your component) */}
     </div>
   );
 };
