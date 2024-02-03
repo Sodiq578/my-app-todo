@@ -163,7 +163,7 @@ const Home = () => {
           </div>
         </div>
       )}
-      {/* ... (rest of your component) */}
+  
     </div>
   );
 };
