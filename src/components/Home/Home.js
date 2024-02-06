@@ -1,26 +1,26 @@
-// Home.js
-
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from "react-router-dom"; // Link komponentini import qo'shing
+import { Link } from "react-router-dom";
 import "./Home.css";
 
-const Home = () => {
+const Home = ({ archivedData, setArchivedData }) => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [newItem, setNewItem] = useState({
-    id: 0,
+    id: 1,
     name: "",
-    summa: 0,
+    summa: "",
     userProvidedTime: new Date(),
     returnedTime: new Date(),
+    manzil: "", // Manzil qo'shish uchun yangi qo'shimcha maydon
     phoneNumbers: [{ id: 1, number: "" }],
   });
   const [editingItemId, setEditingItemId] = useState(null);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [visibleData, setVisibleData] = useState([]);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("yourDataKey")) || [];
@@ -29,30 +29,33 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.setItem("yourDataKey", JSON.stringify(data));
+    setVisibleData(data.slice(0, 10)); // Show first 10 items initially
   }, [data]);
 
   const handleAdd = () => {
-    if (editingItemId !== null) {
-      const updatedData = data.map((item) =>
-        item.id === editingItemId ? { ...item, ...newItem } : item
-      );
-      setData(updatedData);
-      setEditingItemId(null);
-    } else {
-      const newId =
-        data.length > 0 ? Math.max(...data.map((item) => item.id)) + 1 : 1;
-      setData([...data, { id: newId, ...newItem }]);
-    }
+    const newId =
+      data.length > 0 ? Math.max(...data.map((item) => item.id)) + 1 : 1;
+
+    const updatedData = [
+      ...data,
+      {
+        id: newId,
+        ...newItem,
+      },
+    ];
+
+    setData(updatedData);
 
     setShowModal(false);
     setShowDeleteConfirmation(false);
 
     setNewItem({
-      id: 0,
+      id: newId + 1, // Yangi element uchun id 1 ortadi
       name: "",
-      summa: 0,
+      summa: "",
       userProvidedTime: new Date(),
       returnedTime: new Date(),
+      manzil: "", // Yangi element uchun manzil bo'sh qilinadi
       phoneNumbers: [{ id: 1, number: "" }],
     });
   };
@@ -62,12 +65,9 @@ const Home = () => {
 
     setEditingItemId(id);
     setNewItem({
-      id: itemToEdit.id,
-      name: itemToEdit.name,
-      summa: itemToEdit.summa,
+      ...itemToEdit,
       userProvidedTime: new Date(itemToEdit.userProvidedTime),
       returnedTime: new Date(itemToEdit.returnedTime),
-      phoneNumbers: itemToEdit.phoneNumbers || [{ id: 1, number: "" }],
     });
 
     setShowModal(true);
@@ -83,7 +83,7 @@ const Home = () => {
     setData(updatedData);
 
     setShowDeleteConfirmation(false);
-    setItemToDeleteId(null); // Reset the item to delete ID after deletion
+    setItemToDeleteId(null);
   };
 
   const cancelDelete = () => {
@@ -93,6 +93,10 @@ const Home = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
+    const filteredData = data.filter((item) =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setVisibleData(filteredData.slice(0, 10)); // Show first 10 filtered items
   };
 
   const addPhoneNumberRow = () => {
@@ -115,51 +119,154 @@ const Home = () => {
     setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
   };
 
+  const handleRemovePhoneNumber = (phoneNumberId) => {
+    if (showModal) {
+      const updatedPhoneNumbers = newItem.phoneNumbers.filter(
+        (phoneNumber) => phoneNumber.id !== phoneNumberId
+      );
+      setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
+    }
+  };
+
+  const handleSaveEdit = () => {
+    const updatedData = data.map((item) =>
+      item.id === editingItemId ? newItem : item
+    );
+    setData(updatedData);
+    setShowModal(false);
+    setEditingItemId(null);
+  };
+
   return (
     <div className="container">
       <h1>Home</h1>
-      <Link to="/archive">Go to Archive</Link>{" "}
-      {/* Link komponentini ishlatish */}
-      <button onClick={() => setShowModal(true)}>Add</button>
+      <Link className="link" to="/archive">
+        Arxivga o'tish
+      </Link>
+
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+      />
+
+      <button className="add__button" onClick={() => setShowModal(true)}>
+        ➕ Add
+      </button>
       <table className="rwd-table">
         <tbody>
           <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Ism</th>
             <th>Summa</th>
-            <th>User Provided Time</th>
-            <th>Returned Time</th>
-            <th>Phone Numbers</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>Manzil</th>
+            <th>Berilish vaqt</th>
+            <th>Qaytarilish vaqti</th>
+            <th>Telefon raqam</th>
+            <th>Amallar</th>
           </tr>
-          {data.map((item) => (
+          {visibleData.map((item) => (
             <tr key={item.id}>
               <td data-th="ID">{item.id}</td>
-              <td data-th="Name">{item.name}</td>
-              <td data-th="Summa">{item.summa}</td>
-              <td data-th="User Provided Time">
-                {item.userProvidedTime.toString()}
+              <td data-th="Name">
+                <input
+                  type="text"
+                  value={item.name}
+                  maxLength={40}
+                  onChange={(e) =>
+                    setData(
+                      data.map((el) =>
+                        el.id === item.id ? { ...el, name: e.target.value } : el
+                      )
+                    )
+                  }
+                />
               </td>
-              <td data-th="Returned Time">{item.returnedTime.toString()}</td>
-              <td data-th="Phone Numbers">
-                {item.phoneNumbers.map((phoneNumber) => (
+              <td data-th="Summa">
+                <input
+                  type="number"
+                  value={item.summa}
+                  maxLength={40}
+                  onChange={(e) =>
+                    setData(
+                      data.map((el) =>
+                        el.id === item.id
+                          ? { ...el, summa: e.target.value }
+                          : el
+                      )
+                    )
+                  }
+                />
+              </td>
+
+              <td data-th="Manzil">
+                <input
+                  type="text"
+                  value={item.manzil}
+                  maxLength={40}
+                  onChange={(e) =>
+                    setData(
+                      data.map((el) =>
+                        el.id === item.id
+                          ? { ...el, manzil: e.target.value }
+                          : el
+                      )
+                    )
+                  }
+                />
+              </td>
+              <td data-th="User Provided Time">
+                {new Date(item.userProvidedTime).toLocaleDateString("uz-UZ", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+                , soat{" "}
+                {new Date(item.userProvidedTime).toLocaleTimeString("uz-UZ", {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </td>
+              <td data-th="Returned Time">
+                {new Date(item.returnedTime).toLocaleDateString("uz-UZ", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+                , soat{" "}
+                {new Date(item.returnedTime).toLocaleTimeString("uz-UZ", {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </td>
+              <td
+                data-th="Phone Numbers"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                {item.phoneNumbers.map((phoneNumber, index) => (
                   <div key={phoneNumber.id}>
-                    {phoneNumber.number}
-                    <button
-                      onClick={() => removePhoneNumberRow(phoneNumber.id)}
-                    >
-                      Remove
-                    </button>
+                    <a href={`tel:${phoneNumber.number}`}>
+                      {phoneNumber.number}
+                    </a>
+                    {showModal && (
+                      <button
+                        onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
+                      >
+                        Remove
+                      </button>
+                    )}
                   </div>
                 ))}
               </td>
               <td data-th="Edit">
                 <button onClick={() => handleEdit(item.id)}>Edit</button>
-              </td>
-              <td data-th="Delete">
+
                 <button onClick={() => handleDelete(item.id)}>Delete</button>
               </td>
+              
             </tr>
           ))}
         </tbody>
@@ -174,23 +281,37 @@ const Home = () => {
             <input
               type="text"
               value={newItem.name}
+              maxLength={40}
               onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             />
             <label>Summa:</label>
             <input
               type="number"
-              value={newItem.summa}
+              value={newItem.summa === 0 ? "" : newItem.summa}
+              maxLength={40}
               onChange={(e) =>
                 setNewItem({ ...newItem, summa: e.target.value })
               }
             />
+            <label>Manzil:</label>
+            <input
+              type="text"
+              value={newItem.manzil}
+              maxLength={40}
+              onChange={(e) =>
+                setNewItem({ ...newItem, manzil: e.target.value })
+              }
+            />
             <label>User Provided Time:</label>
+
             <DatePicker
               selected={newItem.userProvidedTime}
               onChange={(date) =>
                 setNewItem({ ...newItem, userProvidedTime: date })
               }
+              placeholderText="Select a date"
             />
+
             <label>Returned Time:</label>
             <DatePicker
               selected={newItem.returnedTime}
@@ -205,6 +326,7 @@ const Home = () => {
                   <input
                     type="text"
                     value={phoneNumber.number}
+                    maxLength={40}
                     onChange={(e) =>
                       setNewItem({
                         ...newItem,
@@ -220,7 +342,11 @@ const Home = () => {
               ))}
               <button onClick={addPhoneNumberRow}>Add Phone Number</button>
             </div>
-            <button onClick={handleAdd}>Save</button>
+            {editingItemId && (
+              <button onClick={handleSaveEdit}>Save Edit</button>
+            )}
+            {!editingItemId && <button onClick={handleAdd}>Save</button>}
+            <button onClick={() => setShowModal(false)}>Cancel</button>
           </div>
         </div>
       )}

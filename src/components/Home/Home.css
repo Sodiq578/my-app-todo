@@ -1,7 +1,10 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:600,700';
 
-* {font-family: 'Open Sans', sans-serif;}
+* {
+  font-family: 'Open Sans', sans-serif;
+}
 
+/* Table */
 .rwd-table {
   margin: auto;
   min-width: 300px;
@@ -11,7 +14,7 @@
 
 .rwd-table tr:first-child {
   border-top: none;
-  background: #428bca;
+  background: #42caca !important;
   color: #fff;
 }
 
@@ -68,11 +71,14 @@
 .rwd-table td {
   padding: .5em 1em;
 }
+
 @media screen and (max-width: 601px) {
   .rwd-table tr:nth-child(2) {
     border-top: none;
+    margin: 0 auto;
   }
 }
+
 @media screen and (min-width: 600px) {
   .rwd-table tr:hover:not(:first-child) {
     background-color: #d8e7f3;
@@ -99,24 +105,24 @@
   }
 }
 
-
-/* THE END OF THE IMPORTANT STUFF */
-
 /* Basic Styling */
 body {
-background: #4B79A1;
-background: -webkit-linear-gradient(to left, #4B79A1 , #283E51);
-background: linear-gradient(to left, #4B79A1 , #283E51);        
+  background: #4B79A1;
+  background: -webkit-linear-gradient(to left, #4B79A1 , #283E51);
+  background: linear-gradient(to left, #4B79A1 , #283E51);        
 }
+
 h1 {
   text-align: center;
   font-size: 2.4em;
   color: #f2f2f2;
 }
+
 .container {
   display: block;
   text-align: center;
 }
+
 h3 {
   display: inline-block;
   position: relative;
@@ -124,6 +130,7 @@ h3 {
   font-size: 1.5em;
   color: #cecece;
 }
+
 h3:before {
   content: "\25C0";
   position: absolute;
@@ -131,6 +138,7 @@ h3:before {
   -webkit-animation: leftRight 2s linear infinite;
   animation: leftRight 2s linear infinite;
 }
+
 h3:after {
   content: "\25b6";
   position: absolute;
@@ -138,12 +146,14 @@ h3:after {
   -webkit-animation: leftRight 2s linear infinite reverse;
   animation: leftRight 2s linear infinite reverse;
 }
+
 @-webkit-keyframes leftRight {
   0%    { -webkit-transform: translateX(0)}
   25%   { -webkit-transform: translateX(-10px)}
   75%   { -webkit-transform: translateX(10px)}
   100%  { -webkit-transform: translateX(0)}
 }
+
 @keyframes leftRight {
   0%    { transform: translateX(0)}
   25%   { transform: translateX(-10px)}
@@ -151,45 +161,114 @@ h3:after {
   100%  { transform: translateX(0)}
 }
 
-
-/* Home.css */
-
+/* Modal */
 .modal {
-    display: block;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-top: 60px;
-  }
-  
-  .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-  }
-  
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  padding: 10px 20px !important;
+}
 
-  
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
 
-  
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Additional Button Styles */
+.add__button {
+  background-color: #428bca;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add__button:hover {
+  background-color: #45a049;
+}
+
+/* Additional Link Styles */
+.link {
+  background-color: rgb(0, 55, 255);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.link:hover {
+  background-color: rgb(0, 45, 205);
+}
+
+/* Additional Table Styles */
+td button {
+  background-color: #4c63af;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 12px;
+}
+
+td button:hover {
+  background-color: #7a45a0;
+}
+
+/* Additional Input Styles */
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+}
+
+/* Additional Button Styles */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}

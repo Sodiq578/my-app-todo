@@ -1,20 +1,23 @@
 // Archive.js
 import React from "react";
-
+import { Link } from "react-router-dom";
 const Archive = ({ archivedData }) => {
   return (
     <div className="container">
+      <Link className="link" to={'/'}>Go to home</Link>
       <h1>Archive</h1>
       <table className="rwd-table">
         {/* Display archived data in a table */}
         <tbody>
           <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Ism</th>
             <th>Summa</th>
-            <th>User Provided Time</th>
-            <th>Returned Time</th>
-            <th>Phone Numbers</th>
+            <th>Manzil</th>
+            <th>Berilish vaqt</th>
+            <th>Qaytarilish vaqti</th>
+            <th>Telefon raqam</th>
+            <th>Amallar</th>
           </tr>
           {archivedData?.map((item) => (
             <tr key={item.id}>
@@ -38,4 +41,4 @@ const Archive = ({ archivedData }) => {
   );
 };
 
-export { Archive };
+export default Archive  
