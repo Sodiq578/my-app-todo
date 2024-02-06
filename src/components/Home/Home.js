@@ -3,6 +3,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
 import "./Home.css";
+import NumberFormat from 'react-number-format';
+
 
 const Home = ({ archivedData, setArchivedData }) => {
   const [data, setData] = useState([]);
@@ -14,7 +16,7 @@ const Home = ({ archivedData, setArchivedData }) => {
     summa: "",
     userProvidedTime: new Date(),
     returnedTime: new Date(),
-    manzil: "", // Manzil qo'shish uchun yangi qo'shimcha maydon
+    manzil: "",
     phoneNumbers: [{ id: 1, number: "" }],
   });
   const [editingItemId, setEditingItemId] = useState(null);
@@ -25,12 +27,26 @@ const Home = ({ archivedData, setArchivedData }) => {
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("yourDataKey")) || [];
     setData(storedData);
+    setVisibleData(rearrangeData(storedData).slice(0, 10)); // Malumotlarni to'g'ri joylash
   }, []);
 
   useEffect(() => {
     localStorage.setItem("yourDataKey", JSON.stringify(data));
-    setVisibleData(data.slice(0, 10)); // Show first 10 items initially
+    setVisibleData(rearrangeData(data).slice(0, 10)); // Malumotlarni to'g'ri joylash
   }, [data]);
+
+  const rearrangeData = (data) => {
+    let newData = [];
+    data.forEach((item, index) => {
+      const existingItemIndex = newData.findIndex((newItem) => newItem.id === item.id);
+      if (existingItemIndex !== -1) {
+        newData[existingItemIndex] = item;
+      } else {
+        newData.push(item);
+      }
+    });
+    return newData;
+  };
 
   const handleAdd = () => {
     const newId =
@@ -50,15 +66,18 @@ const Home = ({ archivedData, setArchivedData }) => {
     setShowDeleteConfirmation(false);
 
     setNewItem({
-      id: newId + 1, // Yangi element uchun id 1 ortadi
+      id: newId + 1,
       name: "",
       summa: "",
       userProvidedTime: new Date(),
       returnedTime: new Date(),
-      manzil: "", // Yangi element uchun manzil bo'sh qilinadi
+      manzil: "",
       phoneNumbers: [{ id: 1, number: "" }],
     });
   };
+
+
+
 
   const handleEdit = (id) => {
     const itemToEdit = data.find((item) => item.id === id);
@@ -84,6 +103,7 @@ const Home = ({ archivedData, setArchivedData }) => {
 
     setShowDeleteConfirmation(false);
     setItemToDeleteId(null);
+    setVisibleData(rearrangeData(updatedData).slice(0, 10)); // Malumotlarni to'g'ri joylash
   };
 
   const cancelDelete = () => {
@@ -94,9 +114,12 @@ const Home = ({ archivedData, setArchivedData }) => {
   const handleSearch = (query) => {
     setSearchQuery(query);
     const filteredData = data.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase())
+      item.name.toLowerCase().includes(query.toLowerCase()) ||
+      item.summa.toString().includes(query.toLowerCase()) ||
+      item.manzil.toLowerCase().includes(query.toLowerCase()) ||
+      item.id.toString().includes(query.toLowerCase())
     );
-    setVisibleData(filteredData.slice(0, 10)); // Show first 10 filtered items
+    setVisibleData(rearrangeData(filteredData).slice(0, 10));
   };
 
   const addPhoneNumberRow = () => {
@@ -119,6 +142,7 @@ const Home = ({ archivedData, setArchivedData }) => {
     setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
   };
 
+  
   const handleRemovePhoneNumber = (phoneNumberId) => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
@@ -137,6 +161,7 @@ const Home = ({ archivedData, setArchivedData }) => {
     setEditingItemId(null);
   };
 
+
   return (
     <div className="container">
       <h1>Home</h1>
@@ -144,16 +169,20 @@ const Home = ({ archivedData, setArchivedData }) => {
         Arxivga o'tish
       </Link>
 
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={(e) => handleSearch(e.target.value)}
-      />
+      <div className="search__box">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="search-input"
+        />
 
-      <button className="add__button" onClick={() => setShowModal(true)}>
-        ➕ Add
-      </button>
+        <button className="add__button" onClick={() => setShowModal(true)}>
+          ➕ Add
+        </button>
+      </div>
+
       <table className="rwd-table">
         <tbody>
           <tr>
@@ -174,13 +203,6 @@ const Home = ({ archivedData, setArchivedData }) => {
                   type="text"
                   value={item.name}
                   maxLength={40}
-                  onChange={(e) =>
-                    setData(
-                      data.map((el) =>
-                        el.id === item.id ? { ...el, name: e.target.value } : el
-                      )
-                    )
-                  }
                 />
               </td>
               <td data-th="Summa">
@@ -188,32 +210,13 @@ const Home = ({ archivedData, setArchivedData }) => {
                   type="number"
                   value={item.summa}
                   maxLength={40}
-                  onChange={(e) =>
-                    setData(
-                      data.map((el) =>
-                        el.id === item.id
-                          ? { ...el, summa: e.target.value }
-                          : el
-                      )
-                    )
-                  }
                 />
               </td>
-
               <td data-th="Manzil">
                 <input
                   type="text"
                   value={item.manzil}
                   maxLength={40}
-                  onChange={(e) =>
-                    setData(
-                      data.map((el) =>
-                        el.id === item.id
-                          ? { ...el, manzil: e.target.value }
-                          : el
-                      )
-                    )
-                  }
                 />
               </td>
               <td data-th="User Provided Time">
@@ -263,10 +266,8 @@ const Home = ({ archivedData, setArchivedData }) => {
               </td>
               <td data-th="Edit">
                 <button onClick={() => handleEdit(item.id)}>Edit</button>
-
                 <button onClick={() => handleDelete(item.id)}>Delete</button>
               </td>
-              
             </tr>
           ))}
         </tbody>
