@@ -1,10 +1,11 @@
+// Home.js
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
 import "./Home.css";
-import NumberFormat from 'react-number-format';
-
+import PhoneInput from "react-phone-number-input/input";
+import "react-phone-number-input/style.css";
 
 const Home = ({ archivedData, setArchivedData }) => {
   const [data, setData] = useState([]);
@@ -27,21 +28,19 @@ const Home = ({ archivedData, setArchivedData }) => {
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("yourDataKey")) || [];
     setData(storedData);
-    setVisibleData(rearrangeData(storedData).slice(0, 10)); // Malumotlarni to'g'ri joylash
+    setVisibleData(rearrangeData(storedData).slice(0, 10));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("yourDataKey", JSON.stringify(data));
-    setVisibleData(rearrangeData(data).slice(0, 10)); // Malumotlarni to'g'ri joylash
+    setVisibleData(rearrangeData(data).slice(0, 10));
   }, [data]);
 
   const rearrangeData = (data) => {
-    let newData = [];
-    data.forEach((item, index) => {
-      const existingItemIndex = newData.findIndex((newItem) => newItem.id === item.id);
-      if (existingItemIndex !== -1) {
-        newData[existingItemIndex] = item;
-      } else {
+    const newData = [];
+    const idMap = {};
+    data.forEach((item) => {
+      if (!idMap[item.id]) {
+        idMap[item.id] = true;
         newData.push(item);
       }
     });
@@ -49,14 +48,23 @@ const Home = ({ archivedData, setArchivedData }) => {
   };
 
   const handleAdd = () => {
-    const newId =
-      data.length > 0 ? Math.max(...data.map((item) => item.id)) + 1 : 1;
+    if (
+      newItem.name.trim() === "" ||
+      newItem.summa.trim() === "" ||
+      newItem.manzil.trim() === ""
+    ) {
+      alert("Iltimos, barcha kerakli maydonlarni to'ldiring.");
+      return;
+    }
+
+    const newId = data.length > 0 ? Math.max(...data.map((item) => item.id)) + 1 : 1;
 
     const updatedData = [
       ...data,
       {
         id: newId,
         ...newItem,
+        summa: parseFloat(newItem.summa), // Convert summa to float
       },
     ];
 
@@ -64,6 +72,7 @@ const Home = ({ archivedData, setArchivedData }) => {
 
     setShowModal(false);
     setShowDeleteConfirmation(false);
+    setEditingItemId(null);
 
     setNewItem({
       id: newId + 1,
@@ -74,10 +83,9 @@ const Home = ({ archivedData, setArchivedData }) => {
       manzil: "",
       phoneNumbers: [{ id: 1, number: "" }],
     });
+
+    localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
-
-
-
 
   const handleEdit = (id) => {
     const itemToEdit = data.find((item) => item.id === id);
@@ -93,8 +101,14 @@ const Home = ({ archivedData, setArchivedData }) => {
   };
 
   const handleDelete = (id) => {
+    const itemToArchive = data.find((item) => item.id === id);
     setItemToDeleteId(id);
     setShowDeleteConfirmation(true);
+
+    const updatedArchivedData = [...archivedData, itemToArchive];
+    setArchivedData(updatedArchivedData);
+
+    localStorage.setItem("archivedDataKey", JSON.stringify(updatedArchivedData));
   };
 
   const confirmDelete = () => {
@@ -103,7 +117,9 @@ const Home = ({ archivedData, setArchivedData }) => {
 
     setShowDeleteConfirmation(false);
     setItemToDeleteId(null);
-    setVisibleData(rearrangeData(updatedData).slice(0, 10)); // Malumotlarni to'g'ri joylash
+    setVisibleData(rearrangeData(updatedData).slice(0, 10));
+
+    localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
   const cancelDelete = () => {
@@ -113,11 +129,12 @@ const Home = ({ archivedData, setArchivedData }) => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    const filteredData = data.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase()) ||
-      item.summa.toString().includes(query.toLowerCase()) ||
-      item.manzil.toLowerCase().includes(query.toLowerCase()) ||
-      item.id.toString().includes(query.toLowerCase())
+    const filteredData = data.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.summa.toString().includes(query.toLowerCase()) ||
+        item.manzil.toLowerCase().includes(query.toLowerCase()) ||
+        item.id.toString().includes(query.toLowerCase())
     );
     setVisibleData(rearrangeData(filteredData).slice(0, 10));
   };
@@ -142,7 +159,6 @@ const Home = ({ archivedData, setArchivedData }) => {
     setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
   };
 
-  
   const handleRemovePhoneNumber = (phoneNumberId) => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
@@ -153,18 +169,45 @@ const Home = ({ archivedData, setArchivedData }) => {
   };
 
   const handleSaveEdit = () => {
+    if (
+      newItem.name.trim() === "" ||
+      newItem.summa.trim() === "" ||
+      newItem.manzil.trim() === ""
+    ) {
+      alert("Iltimos, barcha kerakli maydonlarni to'ldiring.");
+      return;
+    }
+
     const updatedData = data.map((item) =>
-      item.id === editingItemId ? newItem : item
+      item.id === editingItemId
+        ? { ...newItem, summa: parseFloat(newItem.summa) }
+        : item
     );
     setData(updatedData);
     setShowModal(false);
     setEditingItemId(null);
+
+    localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
+  const calculateTotalSum = () => {
+    let totalSum = 0;
+    visibleData.forEach((item) => {
+      totalSum += parseFloat(item.summa);
+    });
+    return totalSum;
+  };
 
   return (
     <div className="container">
       <h1>Home</h1>
+      <h2>
+        Jami Summa:{" "}
+        {calculateTotalSum().toLocaleString("uz-UZ", {
+          style: "currency",
+          currency: "UZS",
+        })}
+      </h2>
       <Link className="link" to="/archive">
         Arxivga o'tish
       </Link>
@@ -172,14 +215,14 @@ const Home = ({ archivedData, setArchivedData }) => {
       <div className="search__box">
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Qidiruv..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
           className="search-input"
         />
 
         <button className="add__button" onClick={() => setShowModal(true)}>
-          ➕ Add
+          ➕ Qo'shish
         </button>
       </div>
 
@@ -198,28 +241,22 @@ const Home = ({ archivedData, setArchivedData }) => {
           {visibleData.map((item) => (
             <tr key={item.id}>
               <td data-th="ID">{item.id}</td>
-              <td data-th="Name">
-                <input
-                  type="text"
-                  value={item.name}
-                  maxLength={40}
-                />
+              <td data-th="Ism">
+                <div>
+                  <span className="ism">{item.name}</span>
+                </div>
               </td>
               <td data-th="Summa">
-                <input
-                  type="number"
-                  value={item.summa}
-                  maxLength={40}
-                />
+                <div>
+                  <p>{item.summa.toLocaleString("uz-UZ")} so'm</p>
+                </div>
               </td>
               <td data-th="Manzil">
-                <input
-                  type="text"
-                  value={item.manzil}
-                  maxLength={40}
-                />
+                <div>
+                  <p>{item.manzil}</p>
+                </div>
               </td>
-              <td data-th="User Provided Time">
+              <td data-th="Berilish vaqt">
                 {new Date(item.userProvidedTime).toLocaleDateString("uz-UZ", {
                   weekday: "long",
                   year: "numeric",
@@ -232,7 +269,7 @@ const Home = ({ archivedData, setArchivedData }) => {
                   minute: "numeric",
                 })}
               </td>
-              <td data-th="Returned Time">
+              <td data-th="Qaytarilish vaqti">
                 {new Date(item.returnedTime).toLocaleDateString("uz-UZ", {
                   weekday: "long",
                   year: "numeric",
@@ -246,27 +283,47 @@ const Home = ({ archivedData, setArchivedData }) => {
                 })}
               </td>
               <td
-                data-th="Phone Numbers"
+                data-th="Telefon raqamlar"
+                className="telefon-raqam"
                 style={{ display: "flex", flexDirection: "column" }}
               >
                 {item.phoneNumbers.map((phoneNumber, index) => (
                   <div key={phoneNumber.id}>
-                    <a href={`tel:${phoneNumber.number}`}>
-                      {phoneNumber.number}
-                    </a>
+                    <input
+                      className="telefon-raqam-inp"
+                      type="text"
+                      readOnly
+                      placeholder="Telefon raqam"
+                      value={phoneNumber.number}
+                      onChange={(e) => {
+                        const updatedNumbers = newItem.phoneNumbers.map((num) =>
+                          num.id === phoneNumber.id
+                            ? { ...num, number: e.target.value }
+                            : num
+                        );
+                        setNewItem({
+                          ...newItem,
+                          phoneNumbers: updatedNumbers,
+                        });
+                      }}
+                    />
                     {showModal && (
                       <button
                         onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
                       >
-                        Remove
+                        Olib tashlash
                       </button>
                     )}
                   </div>
                 ))}
               </td>
-              <td data-th="Edit">
-                <button onClick={() => handleEdit(item.id)}>Edit</button>
-                <button onClick={() => handleDelete(item.id)}>Delete</button>
+              <td data-th="Amallar">
+                <button onClick={() => handleEdit(item.id)}>
+                  <i className="fas fa-edit"></i> Tahrirlash
+                </button>
+                <button onClick={() => handleDelete(item.id)}>
+                  <i className="fas fa-trash-alt"></i> O'chirish
+                </button>
               </td>
             </tr>
           ))}
@@ -278,7 +335,7 @@ const Home = ({ archivedData, setArchivedData }) => {
             <span className="close" onClick={() => setShowModal(false)}>
               &times;
             </span>
-            <label>Name:</label>
+            <label>Ism:</label>
             <input
               type="text"
               value={newItem.name}
@@ -288,75 +345,79 @@ const Home = ({ archivedData, setArchivedData }) => {
             <label>Summa:</label>
             <input
               type="number"
-              value={newItem.summa === 0 ? "" : newItem.summa}
-              maxLength={40}
+              value={newItem.summa}
               onChange={(e) =>
                 setNewItem({ ...newItem, summa: e.target.value })
               }
             />
-            <label>Manzil:</label>
             <input
               type="text"
+              placeholder="Manzil"
               value={newItem.manzil}
               maxLength={40}
               onChange={(e) =>
                 setNewItem({ ...newItem, manzil: e.target.value })
               }
             />
-            <label>User Provided Time:</label>
-
+            <label>Berilish vaqti:</label>
             <DatePicker
+              className="vaqt"
+              placeholderText="Sana tanlang"
               selected={newItem.userProvidedTime}
-              onChange={(date) =>
-                setNewItem({ ...newItem, userProvidedTime: date })
-              }
-              placeholderText="Select a date"
+              onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
+              locale="ru" // Rus tilida
             />
-
-            <label>Returned Time:</label>
             <DatePicker
+              className="vaqt"
+              placeholderText="Sana tanlang"
               selected={newItem.returnedTime}
-              onChange={(date) =>
-                setNewItem({ ...newItem, returnedTime: date })
-              }
+              onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
+              locale="ru" // Rus tilida
             />
             <div>
-              <label>Phone Numbers:</label>
-              {newItem.phoneNumbers.map((phoneNumber) => (
+              {newItem.phoneNumbers.map((phoneNumber, index) => (
                 <div key={phoneNumber.id}>
-                  <input
-                    type="text"
+                  <PhoneInput
+                    placeholder="Telefon raqam"
+                    className="telefon-raqam-kiritish"
                     value={phoneNumber.number}
-                    maxLength={40}
-                    onChange={(e) =>
-                      setNewItem({
-                        ...newItem,
-                        phoneNumbers: newItem.phoneNumbers.map((num) =>
-                          num.id === phoneNumber.id
-                            ? { ...num, number: e.target.value }
-                            : num
-                        ),
-                      })
-                    }
+                    onChange={(value) => {
+                      const updatedNumbers = newItem.phoneNumbers.map((num) =>
+                        num.id === phoneNumber.id
+                          ? { ...num, number: value }
+                          : num
+                      );
+                      setNewItem({ ...newItem, phoneNumbers: updatedNumbers });
+                    }}
                   />
+                  {showModal && (
+                    <button
+                      onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
+                    >
+                      Olib tashlash
+                    </button>
+                  )}
                 </div>
               ))}
-              <button onClick={addPhoneNumberRow}>Add Phone Number</button>
+              <button onClick={addPhoneNumberRow}>
+                Telefon raqam qo'shish
+              </button>
             </div>
-            {editingItemId && (
-              <button onClick={handleSaveEdit}>Save Edit</button>
+            {editingItemId ? (
+              <button onClick={handleSaveEdit}>Tahrirni saqlash</button>
+            ) : (
+              <button onClick={handleAdd}>Saqlash</button>
             )}
-            {!editingItemId && <button onClick={handleAdd}>Save</button>}
-            <button onClick={() => setShowModal(false)}>Cancel</button>
+            <button onClick={() => setShowModal(false)}>Bekor qilish</button>
           </div>
         </div>
       )}
       {showDeleteConfirmation && (
         <div className="modal">
           <div className="modal-content">
-            <p>Are you sure you want to delete this item?</p>
-            <button onClick={confirmDelete}>Yes</button>
-            <button onClick={cancelDelete}>No</button>
+            <p>Haqiqatan ham ushbu narsani o'chirmoqchimisiz?</p>
+            <button onClick={confirmDelete}>Ha</button>
+            <button onClick={cancelDelete}>Yo'q</button>
           </div>
         </div>
       )}

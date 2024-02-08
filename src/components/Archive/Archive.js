@@ -1,23 +1,38 @@
-// Archive.js
 import React from "react";
 import { Link } from "react-router-dom";
-const Archive = ({ archivedData }) => {
+
+const Archive = ({ archivedData, setArchivedData }) => {
+  const handleDelete = (id) => {
+    const updatedArchivedData = archivedData.filter((item) => item.id !== id);
+    setArchivedData(updatedArchivedData);
+    // localStorage.setItem("archivedDataKey", JSON.stringify(updatedArchivedData));
+  };
+
+  const handleAdd = () => {
+    const deletedData = JSON.parse(localStorage.getItem("deletedDataKey"));
+    if (deletedData && deletedData.length > 0) {
+      const lastDeletedItem = deletedData.pop();
+      const updatedArchivedData = [...archivedData, lastDeletedItem];
+      setArchivedData(updatedArchivedData);
+      localStorage.setItem("archivedDataKey", JSON.stringify(updatedArchivedData));
+      localStorage.setItem("deletedDataKey", JSON.stringify(deletedData));
+    }
+  };
+
   return (
     <div className="container">
-      <Link className="link" to={'/'}>Go to home</Link>
+      <Link className="link" to={'/'}>Home sahifasiga qaytish</Link>
       <h1>Archive</h1>
+ 
       <table className="rwd-table">
-        {/* Display archived data in a table */}
         <tbody>
           <tr>
             <th>ID</th>
             <th>Ism</th>
             <th>Summa</th>
-            <th>Manzil</th>
-            <th>Berilish vaqt</th>
+            <th>Berilish vaqti</th>
             <th>Qaytarilish vaqti</th>
             <th>Telefon raqam</th>
-            <th>Amallar</th>
           </tr>
           {archivedData?.map((item) => (
             <tr key={item.id}>
@@ -33,6 +48,9 @@ const Archive = ({ archivedData }) => {
                   <div key={phoneNumber.id}>{phoneNumber.number}</div>
                 ))}
               </td>
+              <td data-th="Delete">
+                <button onClick={() => handleDelete(item.id)}>O'chirish</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -41,4 +59,4 @@ const Archive = ({ archivedData }) => {
   );
 };
 
-export default Archive  
+export default Archive;

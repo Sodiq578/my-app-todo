@@ -1,0 +1,36 @@
+/* Parol.css */
+
+.parol-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  .parol-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .parol-container input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .parol-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .parol-container button:hover {
+    background-color: #0056b3;
+  }
+  

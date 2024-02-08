@@ -295,3 +295,64 @@ button:hover {
   justify-content: space-around;
 
 }
+.telefon-raqam{
+  margin-top: 25px;
+}
+
+
+.telefon-raqam-inp{
+  background-color: white;
+  border: none;
+  
+}
+
+
+.telefon-raqam-inp {
+  width: 100%; /* Inputning to'liq eni */
+  padding: 8px; /* Haroratlash uchun o'lchamlar */
+  border: 1px solid #ccc; /* Inputning chetida ramka */
+  border-radius: 4px; /* Inputning kengaytmasi */
+  margin-bottom: 10px; /* Pastga bo'shliq qoldirish */
+  box-sizing: border-box; /* Border va padding ni hisoblash usuli */
+}
+
+/* Agar kerak bo'lsa, inputga ishora qilib ko'rsatiladigan stil */
+.telefon-raqam-inp:focus {
+  outline: none; /* Fokus bilan bog'liq chiziqni o'chirish */
+  border-color: #007bff; /* Fokuslangan input uchun ramka rangi */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Fokuslangan input uchun kengaytma */
+}
+
+.vaqt{
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #d60707;
+}
+
+.telefon-raqam-kiritish{
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+}
+
+
+.vaqt {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+}
