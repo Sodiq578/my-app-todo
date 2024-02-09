@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Parol.css'; // Stil dosyasını içe aktar
 
 const Parol = ({ onLogin }) => {
   const [password, setPassword] = useState("");
@@ -8,18 +9,21 @@ const Parol = ({ onLogin }) => {
   };
 
   return (
-    <div>
-      <h2>Parol</h2>
-      <input
-        type="password"
-        placeholder="Parolni kiriting"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Kirish</button>
+  
+    <div className="parol-container">
+      <div className="particles-js"></div> {/* Parçacık animasyonu konteyneri */}
+      <div className="content">
+        <h2>Parol</h2>
+        <input
+          type="password"
+          placeholder="Parolni kiriting"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={handleSubmit}>Kirish</button>
+      </div>
     </div>
   );
 };
 
 export default Parol;
-

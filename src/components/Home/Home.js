@@ -1,4 +1,3 @@
-// Home.js
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,7 +11,6 @@ const Home = ({ archivedData, setArchivedData }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [newItem, setNewItem] = useState({
-    id: 1,
     name: "",
     summa: "",
     userProvidedTime: new Date(),
@@ -35,16 +33,40 @@ const Home = ({ archivedData, setArchivedData }) => {
     setVisibleData(rearrangeData(data).slice(0, 10));
   }, [data]);
 
-  const rearrangeData = (data) => {
-    const newData = [];
-    const idMap = {};
-    data.forEach((item) => {
-      if (!idMap[item.id]) {
-        idMap[item.id] = true;
-        newData.push(item);
-      }
+  const addPhoneNumberRow = () => {
+    const newId =
+      newItem.phoneNumbers.length > 0
+        ? Math.max(...newItem.phoneNumbers.map((number) => number.id)) + 1
+        : 1;
+
+    setNewItem({
+      ...newItem,
+      phoneNumbers: [...newItem.phoneNumbers, { id: newId, number: "" }],
     });
-    return newData;
+  };
+
+  const calculateTotalSum = () => {
+    let totalSum = 0;
+    visibleData.forEach((item) => {
+      totalSum += parseFloat(item.summa);
+    });
+    return totalSum;
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
+    setItemToDeleteId(null);
+  };
+
+  const confirmDelete = () => {
+    const updatedData = data.filter((item) => item.id !== itemToDeleteId);
+    setData(updatedData);
+
+    setShowDeleteConfirmation(false);
+    setItemToDeleteId(null);
+    setVisibleData(rearrangeData(updatedData).slice(0, 10));
+
+    localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
   const handleAdd = () => {
@@ -57,12 +79,10 @@ const Home = ({ archivedData, setArchivedData }) => {
       return;
     }
 
-    const newId = data.length > 0 ? Math.max(...data.map((item) => item.id)) + 1 : 1;
-
     const updatedData = [
       ...data,
       {
-        id: newId,
+        id: Math.random().toString(36).substr(2, 9), // Random ID
         ...newItem,
         summa: parseFloat(newItem.summa), // Convert summa to float
       },
@@ -75,7 +95,6 @@ const Home = ({ archivedData, setArchivedData }) => {
     setEditingItemId(null);
 
     setNewItem({
-      id: newId + 1,
       name: "",
       summa: "",
       userProvidedTime: new Date(),
@@ -85,6 +104,11 @@ const Home = ({ archivedData, setArchivedData }) => {
     });
 
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
+  };
+
+  const handleDelete = (id) => {
+    setItemToDeleteId(id);
+    setShowDeleteConfirmation(true);
   };
 
   const handleEdit = (id) => {
@@ -100,65 +124,6 @@ const Home = ({ archivedData, setArchivedData }) => {
     setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    const itemToArchive = data.find((item) => item.id === id);
-    setItemToDeleteId(id);
-    setShowDeleteConfirmation(true);
-
-    const updatedArchivedData = [...archivedData, itemToArchive];
-    setArchivedData(updatedArchivedData);
-
-    localStorage.setItem("archivedDataKey", JSON.stringify(updatedArchivedData));
-  };
-
-  const confirmDelete = () => {
-    const updatedData = data.filter((item) => item.id !== itemToDeleteId);
-    setData(updatedData);
-
-    setShowDeleteConfirmation(false);
-    setItemToDeleteId(null);
-    setVisibleData(rearrangeData(updatedData).slice(0, 10));
-
-    localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
-  };
-
-  const cancelDelete = () => {
-    setItemToDeleteId(null);
-    setShowDeleteConfirmation(false);
-  };
-
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    const filteredData = data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query.toLowerCase()) ||
-        item.summa.toString().includes(query.toLowerCase()) ||
-        item.manzil.toLowerCase().includes(query.toLowerCase()) ||
-        item.id.toString().includes(query.toLowerCase())
-    );
-    setVisibleData(rearrangeData(filteredData).slice(0, 10));
-  };
-
-  const addPhoneNumberRow = () => {
-    const newId =
-      newItem.phoneNumbers.length > 0
-        ? Math.max(...newItem.phoneNumbers.map((number) => number.id)) + 1
-        : 1;
-
-    setNewItem({
-      ...newItem,
-      phoneNumbers: [...newItem.phoneNumbers, { id: newId, number: "" }],
-    });
-  };
-
-  const removePhoneNumberRow = (id) => {
-    const updatedPhoneNumbers = newItem.phoneNumbers.filter(
-      (number) => number.id !== id
-    );
-
-    setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
-  };
-
   const handleRemovePhoneNumber = (phoneNumberId) => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
@@ -169,9 +134,11 @@ const Home = ({ archivedData, setArchivedData }) => {
   };
 
   const handleSaveEdit = () => {
+    newItem.summa = parseFloat(newItem.summa);
+
     if (
       newItem.name.trim() === "" ||
-      newItem.summa.trim() === "" ||
+      newItem.summa.toString().trim() === "" ||
       newItem.manzil.trim() === ""
     ) {
       alert("Iltimos, barcha kerakli maydonlarni to'ldiring.");
@@ -190,12 +157,28 @@ const Home = ({ archivedData, setArchivedData }) => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  const calculateTotalSum = () => {
-    let totalSum = 0;
-    visibleData.forEach((item) => {
-      totalSum += parseFloat(item.summa);
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filteredData = data.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.summa.toString().includes(query.toLowerCase()) ||
+        item.manzil.toLowerCase().includes(query.toLowerCase()) ||
+        item.id.toString().includes(query.toLowerCase())
+    );
+    setVisibleData(rearrangeData(filteredData).slice(0, 10));
+  };
+
+  const rearrangeData = (data) => {
+    const newData = [];
+    const idMap = {};
+    data.forEach((item) => {
+      if (!idMap[item.id]) {
+        idMap[item.id] = true;
+        newData.push(item);
+      }
     });
-    return totalSum;
+    return newData;
   };
 
   return (
@@ -240,7 +223,7 @@ const Home = ({ archivedData, setArchivedData }) => {
           </tr>
           {visibleData.map((item) => (
             <tr key={item.id}>
-              <td data-th="ID">{item.id}</td>
+              <td data-th="ID">{/* item.id */}</td>
               <td data-th="Ism">
                 <div>
                   <span className="ism">{item.name}</span>
@@ -322,7 +305,7 @@ const Home = ({ archivedData, setArchivedData }) => {
                   <i className="fas fa-edit"></i> Tahrirlash
                 </button>
                 <button onClick={() => handleDelete(item.id)}>
-                  <i className="fas fa-trash-alt"></i> O'chirish
+                  <i className="fas fa-trash-alt"></i> To'langan
                 </button>
               </td>
             </tr>
@@ -364,7 +347,9 @@ const Home = ({ archivedData, setArchivedData }) => {
               className="vaqt"
               placeholderText="Sana tanlang"
               selected={newItem.userProvidedTime}
-              onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
+              onChange={(date) =>
+                setNewItem({ ...newItem, userProvidedTime: date })
+              }
               locale="ru" // Rus tilida
             />
             <DatePicker

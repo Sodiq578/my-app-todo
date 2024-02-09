@@ -4,6 +4,11 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+body{
+  background-size: cover; /* Rasmni to'liq qamrab olmasligi uchun */
+  background-position: center; /* Rasmning o'rtasiga joylashish */
+  background-image: url('../../images/pul24.jpg') !important; 
+}
 /* Table */
 .rwd-table {
   margin: auto;
@@ -79,7 +84,18 @@
   }
 }
 
+@media screen and (max-width: 500px) {
+  .container h2 {
+    color: yellow;
+  }
+}
+
+
 @media screen and (min-width: 600px) {
+  .container h2{
+    margin: 0 auto;
+    background-color: gren;
+  }
   .rwd-table tr:hover:not(:first-child) {
     background-color: #d8e7f3;
   }
@@ -106,11 +122,12 @@
 }
 
 /* Basic Styling */
-body {
-  background: #4B79A1;
-  background: -webkit-linear-gradient(to left, #4B79A1 , #283E51);
-  background: linear-gradient(to left, #4B79A1 , #283E51);        
+.parol-container {
+  background-image: url('../../images/qul2.jpg'); /* Rasmini joylang */
+  background-size: cover; /* Rasmi to'liq qoplansin */
+  background-position: center; /* Rasmi o'rta bo'ylab joylang */
 }
+
 
 h1 {
   text-align: center;
@@ -356,3 +373,11 @@ button:hover {
   font-size: 16px;
   background-color: #f8f8f8;
 }
+
+
+.container h2{
+  color: red;
+  text-align: right;
+  padding-right: 100px;
+}
+

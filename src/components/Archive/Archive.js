@@ -2,11 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Archive = ({ archivedData, setArchivedData }) => {
-  const handleDelete = (id) => {
-    const updatedArchivedData = archivedData.filter((item) => item.id !== id);
-    setArchivedData(updatedArchivedData);
-    // localStorage.setItem("archivedDataKey", JSON.stringify(updatedArchivedData));
-  };
 
   const handleAdd = () => {
     const deletedData = JSON.parse(localStorage.getItem("deletedDataKey"));
@@ -49,7 +44,7 @@ const Archive = ({ archivedData, setArchivedData }) => {
                 ))}
               </td>
               <td data-th="Delete">
-                <button onClick={() => handleDelete(item.id)}>O'chirish</button>
+                <button onClick={() => (item.id)}>To'landi</button>
               </td>
             </tr>
           ))}

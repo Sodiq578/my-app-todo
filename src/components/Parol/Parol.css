@@ -1,36 +1,56 @@
 /* Parol.css */
 
+body{
+  background-image: url('../../images/qul2.jpg'); /* Background rasmi */
+
+}
 .parol-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
-  }
-  
-  .parol-container h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .parol-container input[type="password"] {
-    padding: 10px;
-    margin-bottom: 20px;
-    width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .parol-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .parol-container button:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background-image: url('../../images/qul2.jpg'); Background rasmi */
+  background-size: cover; /* Rasmni to'liq qamrab olmasligi uchun */
+  background-position: center; /* Rasmning o'rtasiga joylashish */
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Content uchun o'q rasm */
+  border-radius: 10px;
+}
+
+.parol-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.parol-container input[type="password"],
+.parol-container button {
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: all 0.3s ease; /* Animatsiya uchun */
+}
+
+.parol-container input[type="password"]:hover,
+.parol-container button:hover {
+  transform: scale(1.05); /* Hover bo'lganda o'lchamini oshirish */
+}
+
+.parol-container button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.parol-container button:hover {
+  background-color: #0056b3;
+}
