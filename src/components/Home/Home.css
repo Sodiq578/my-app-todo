@@ -8,6 +8,7 @@ body{
   background-size: cover; /* Rasmni to'liq qamrab olmasligi uchun */
   background-position: center; /* Rasmning o'rtasiga joylashish */
   background-image: url('../../images/pul24.jpg') !important; 
+ 
 }
 /* Table */
 .rwd-table {
@@ -381,3 +382,23 @@ button:hover {
   padding-right: 100px;
 }
 
+
+.ismdagi {
+  font-weight: bold;
+  color: blue;
+}
+
+.mazilga {
+  font-style: italic;
+  color: green;
+}
+
+.qolganlariga {
+  text-decoration: underline;
+  color: purple;
+}
+
+
+alert{
+  background-color: yellow ;
+}

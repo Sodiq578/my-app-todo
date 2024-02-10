@@ -33,10 +33,36 @@ const Home = ({ archivedData, setArchivedData }) => {
     setVisibleData(rearrangeData(data).slice(0, 10));
   }, [data]);
 
+  useEffect(() => {
+    const now = new Date();
+    const itemsWithDueDate = data.filter((item) => {
+      const returnedTime = new Date(item.returnedTime);
+      return (
+        returnedTime.getFullYear() === now.getFullYear() &&
+        returnedTime.getMonth() === now.getMonth() &&
+        returnedTime.getDate() === now.getDate()
+      );
+    });
+  
+    if (itemsWithDueDate.length > 0) {
+      alert(
+        `Qaytarilish vaqti o'tgan buyurtmalar mavjud Ismi: ${itemsWithDueDate
+          .map((item) => item.name)
+          .join(", ")} \nManzil: ${itemsWithDueDate
+          .map((item) => item.manzil)
+          .join(", ")} \nTelefon raqamlar: ${itemsWithDueDate
+          .map((item) => item.phoneNumbers.map((phone) => phone.number))
+          .join(", ")}`
+      );
+  
+     
+    }
+  }, [data]);
+  
   const addPhoneNumberRow = () => {
     const newId =
       newItem.phoneNumbers.length > 0
-        ? Math.max(...newItem.phoneNumbers.map((number) => number.id)) + 1
+        ? Math.max(...newItem.phoneNumbers.map(number => number.id)) + 1
         : 1;
 
     setNewItem({
@@ -47,7 +73,7 @@ const Home = ({ archivedData, setArchivedData }) => {
 
   const calculateTotalSum = () => {
     let totalSum = 0;
-    visibleData.forEach((item) => {
+    visibleData.forEach(item => {
       totalSum += parseFloat(item.summa);
     });
     return totalSum;
@@ -59,7 +85,7 @@ const Home = ({ archivedData, setArchivedData }) => {
   };
 
   const confirmDelete = () => {
-    const updatedData = data.filter((item) => item.id !== itemToDeleteId);
+    const updatedData = data.filter(item => item.id !== itemToDeleteId);
     setData(updatedData);
 
     setShowDeleteConfirmation(false);
@@ -106,13 +132,13 @@ const Home = ({ archivedData, setArchivedData }) => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     setItemToDeleteId(id);
     setShowDeleteConfirmation(true);
   };
 
-  const handleEdit = (id) => {
-    const itemToEdit = data.find((item) => item.id === id);
+  const handleEdit = id => {
+    const itemToEdit = data.find(item => item.id === id);
 
     setEditingItemId(id);
     setNewItem({
@@ -124,10 +150,10 @@ const Home = ({ archivedData, setArchivedData }) => {
     setShowModal(true);
   };
 
-  const handleRemovePhoneNumber = (phoneNumberId) => {
+  const handleRemovePhoneNumber = phoneNumberId => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
-        (phoneNumber) => phoneNumber.id !== phoneNumberId
+        phoneNumber => phoneNumber.id !== phoneNumberId
       );
       setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
     }
@@ -145,10 +171,8 @@ const Home = ({ archivedData, setArchivedData }) => {
       return;
     }
 
-    const updatedData = data.map((item) =>
-      item.id === editingItemId
-        ? { ...newItem, summa: parseFloat(newItem.summa) }
-        : item
+    const updatedData = data.map(item =>
+      item.id === editingItemId ? { ...newItem, summa: parseFloat(newItem.summa) } : item
     );
     setData(updatedData);
     setShowModal(false);
@@ -157,10 +181,10 @@ const Home = ({ archivedData, setArchivedData }) => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  const handleSearch = (query) => {
+  const handleSearch = query => {
     setSearchQuery(query);
     const filteredData = data.filter(
-      (item) =>
+      item =>
         item.name.toLowerCase().includes(query.toLowerCase()) ||
         item.summa.toString().includes(query.toLowerCase()) ||
         item.manzil.toLowerCase().includes(query.toLowerCase()) ||
@@ -169,10 +193,10 @@ const Home = ({ archivedData, setArchivedData }) => {
     setVisibleData(rearrangeData(filteredData).slice(0, 10));
   };
 
-  const rearrangeData = (data) => {
+  const rearrangeData = data => {
     const newData = [];
     const idMap = {};
-    data.forEach((item) => {
+    data.forEach(item => {
       if (!idMap[item.id]) {
         idMap[item.id] = true;
         newData.push(item);
@@ -183,7 +207,7 @@ const Home = ({ archivedData, setArchivedData }) => {
 
   return (
     <div className="container">
-      <h1>Home</h1>
+   
       <h2>
         Jami Summa:{" "}
         {calculateTotalSum().toLocaleString("uz-UZ", {
@@ -191,16 +215,16 @@ const Home = ({ archivedData, setArchivedData }) => {
           currency: "UZS",
         })}
       </h2>
-      <Link className="link" to="/archive">
+      {/* <Link className="link" to="/archive">
         Arxivga o'tish
-      </Link>
+      </Link> */}
 
       <div className="search__box">
         <input
           type="text"
           placeholder="Qidiruv..."
           value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={e => handleSearch(e.target.value)}
           className="search-input"
         />
 
@@ -221,9 +245,18 @@ const Home = ({ archivedData, setArchivedData }) => {
             <th>Telefon raqam</th>
             <th>Amallar</th>
           </tr>
-          {visibleData.map((item) => (
-            <tr key={item.id}>
-              <td data-th="ID">{/* item.id */}</td>
+          {visibleData.map(item => (
+            <tr
+              key={item.id}
+              style={{
+                backgroundColor:
+                  new Date(item.returnedTime).toDateString() ===
+                  new Date().toDateString()
+                    ? "#FF8E8E"
+                    : "white",
+              }}
+            >
+              <td data-th="ID">{item.id}</td>
               <td data-th="Ism">
                 <div>
                   <span className="ism">{item.name}</span>
@@ -270,7 +303,7 @@ const Home = ({ archivedData, setArchivedData }) => {
                 className="telefon-raqam"
                 style={{ display: "flex", flexDirection: "column" }}
               >
-                {item.phoneNumbers.map((phoneNumber, index) => (
+                {item.phoneNumbers.map(phoneNumber => (
                   <div key={phoneNumber.id}>
                     <input
                       className="telefon-raqam-inp"
@@ -278,11 +311,9 @@ const Home = ({ archivedData, setArchivedData }) => {
                       readOnly
                       placeholder="Telefon raqam"
                       value={phoneNumber.number}
-                      onChange={(e) => {
-                        const updatedNumbers = newItem.phoneNumbers.map((num) =>
-                          num.id === phoneNumber.id
-                            ? { ...num, number: e.target.value }
-                            : num
+                      onChange={e => {
+                        const updatedNumbers = newItem.phoneNumbers.map(num =>
+                          num.id === phoneNumber.id ? { ...num, number: e.target.value } : num
                         );
                         setNewItem({
                           ...newItem,
@@ -291,9 +322,7 @@ const Home = ({ archivedData, setArchivedData }) => {
                       }}
                     />
                     {showModal && (
-                      <button
-                        onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
-                      >
+                      <button onClick={() => handleRemovePhoneNumber(phoneNumber.id)}>
                         Olib tashlash
                       </button>
                     )}
@@ -323,70 +352,60 @@ const Home = ({ archivedData, setArchivedData }) => {
               type="text"
               value={newItem.name}
               maxLength={40}
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+              onChange={e => setNewItem({ ...newItem, name: e.target.value })}
             />
             <label>Summa:</label>
             <input
               type="number"
               value={newItem.summa}
-              onChange={(e) =>
-                setNewItem({ ...newItem, summa: e.target.value })
-              }
+              onChange={e => setNewItem({ ...newItem, summa: e.target.value })}
             />
             <input
               type="text"
               placeholder="Manzil"
               value={newItem.manzil}
               maxLength={40}
-              onChange={(e) =>
-                setNewItem({ ...newItem, manzil: e.target.value })
-              }
+              onChange={e => setNewItem({ ...newItem, manzil: e.target.value })}
             />
             <label>Berilish vaqti:</label>
             <DatePicker
               className="vaqt"
               placeholderText="Sana tanlang"
               selected={newItem.userProvidedTime}
-              onChange={(date) =>
-                setNewItem({ ...newItem, userProvidedTime: date })
-              }
+              onChange={date => setNewItem({ ...newItem, userProvidedTime: date })}
               locale="ru" // Rus tilida
             />
+            <label>Qaytarilish vaqti:</label>
+
             <DatePicker
               className="vaqt"
               placeholderText="Sana tanlang"
               selected={newItem.returnedTime}
-              onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
+              onChange={date => setNewItem({ ...newItem, returnedTime: date })}
               locale="ru" // Rus tilida
             />
             <div>
-              {newItem.phoneNumbers.map((phoneNumber, index) => (
+              {newItem.phoneNumbers.map(phoneNumber => (
                 <div key={phoneNumber.id}>
                   <PhoneInput
                     placeholder="Telefon raqam"
                     className="telefon-raqam-kiritish"
                     value={phoneNumber.number}
-                    onChange={(value) => {
-                      const updatedNumbers = newItem.phoneNumbers.map((num) =>
-                        num.id === phoneNumber.id
-                          ? { ...num, number: value }
-                          : num
+                    onChange={value => {
+                      const updatedNumbers = newItem.phoneNumbers.map(num =>
+                        num.id === phoneNumber.id ? { ...num, number: value } : num
                       );
                       setNewItem({ ...newItem, phoneNumbers: updatedNumbers });
                     }}
                   />
                   {showModal && (
-                    <button
-                      onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
-                    >
+                    <button onClick={() => handleRemovePhoneNumber(phoneNumber.id)}>
                       Olib tashlash
                     </button>
                   )}
                 </div>
               ))}
-              <button onClick={addPhoneNumberRow}>
-                Telefon raqam qo'shish
-              </button>
+              <button onClick={addPhoneNumberRow}>Telefon raqam qo'shish</button>
             </div>
             {editingItemId ? (
               <button onClick={handleSaveEdit}>Tahrirni saqlash</button>

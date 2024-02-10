@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Parol.css'; // Stil dosyasını içe aktar
+import { Font } from 'react-google-fonts';
 
 const Parol = ({ onLogin }) => {
   const [password, setPassword] = useState("");
