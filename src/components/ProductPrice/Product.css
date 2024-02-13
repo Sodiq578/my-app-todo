@@ -1,0 +1,183 @@
+.modal {
+    display: block; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4); 
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .wrap-table {
+    width: 95%;
+    max-width: 960px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    margin: 20px;
+  }
+  
+  .personal-styles {
+    --table-display: table;
+    --table-additional-font-family: "Oswald", sans-serif;
+    --table-base-width: 100%;
+    --table-base-text-transform: uppercase;
+    --table-base-display: block;
+    --table-base-line-height: 1.2;
+    --table-row-display: table-row;
+    --table-row-padding: 0;
+    --table-row-border-bottom: none;
+    --table-last-row-border: none;
+    --table-cell-display: table-cell;
+    --table-common-cell-1-width: 300px;
+    --table-common-cell-2-width: 200px;
+    --table-common-cell-3-width: 200px;
+    --table-common-cell-4-width: 200px;
+    --table-common-cell-1-padding: 0 0 0 40px;
+    --table-cell-border-bottom: 1px solid #f2f2f2;
+    --table-cell-padding: 20px 0px 20px 0;
+    --table-cell-font-size: 16px;
+    --table-cell-color: #666;
+    --table-header-display: table-row;
+    --table-header-bgcolor: #7a90ff;
+    --table-header-cell-display: table-cell;
+    --table-header-cell-padding: 20px 0px 20px 0;
+    --table-header-cell-font-size: 18px;
+    --table-header-cell-color: #fff;
+  }
+  
+  .table {
+    width: var(--table-base-width);
+    display: var(--table-display);
+  }
+  
+  .table__header {
+    background: var(--table-header-bgcolor);
+    width: var(--table-base-width);
+    display: var(--table-header-display);
+  }
+  
+  .table__header__cell {
+    display: var(--table-cell-display);
+    font-size: var(--table-header-cell-font-size);
+    color: var(--table-header-cell-color);
+    line-height: var(--table-base-line-height);
+    padding: var(--table-header-cell-padding);
+    text-transform: var(--table-base-text-transform);
+    font-family: var(--table-additional-font-family);
+  }
+  
+  .table__row {
+    display: var(--table-row-display);
+    background: #fff;
+    width: var(--table-base-width);
+    padding: var(--table-row-padding);
+    border-bottom: var(--table-row-border-bottom);
+  }
+  
+  .table__last-row {
+    border: var(--table-last-row-border);
+  }
+  
+  .table__cell {
+    display: var(--table-cell-display);
+    font-size: var(--table-cell-font-size);
+    color: var(--table-cell-color);
+    line-height: var(--table-base-line-height);
+    padding: var(--table-cell-padding);
+    border-bottom: var(--table-cell-border-bottom);
+  }
+  
+  .table__common-cell-1 {
+    width: var(--table-common-cell-1-width);
+    padding: var(--table-common-cell-1-padding);
+  }
+  
+  .table__common-cell-2 {
+    width: var(--table-common-cell-2-width);
+  }
+  
+  .table__common-cell-3 {
+    width: var(--table-common-cell-3-width);
+  }
+  
+  .table__common-cell-4 {
+    width: var(--table-common-cell-3-width);
+  }
+  
+  @media (max-width: 768px) {
+    .personal-styles {
+      --table-display: block;
+      --table-cell-border-bottom: none;
+      --table-cell-padding: 16px 0px 16px 30px;
+      --table-cell-font-size: 16px;
+      --table-row-display: block;
+      --table-cell-display: block;
+      --table-header-display: none;
+      --table-header-cell-display: none;
+      --table-common-cell-1-width: 100%;
+      --table-common-cell-2-width: 100%;
+      --table-common-cell-3-width: 100%;
+      --table-common-cell-4-width: 100%;
+      --table-common-cell-1-padding: 30px;
+      --table-row-padding: 30px 15px 18px 0px;
+      --table-row-border-bottom: 3px solid #e8e4e4;
+    }
+  
+    .table__cell:before {
+      font-size: 16px;
+      color: #525252;
+      line-height: var(--table-base-line-height);
+      text-transform: var(--table-base-text-transform);
+      margin-bottom: 13px;
+      content: attr(data-title);
+      min-width: 98px;
+      display: var(--table-base-display);
+      font-family: var(--table-additional-font-family);
+    }
+  }
+  
+
+  
+  
+  .add_product{
+    width: 50%;
+    background-color: red !important;
+    display: flex;
+    justify-content: center;
+
+  }
+
+
+  .add__product-box{
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+

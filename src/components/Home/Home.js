@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from "react-router-dom";
-import "./Home.css";
 import PhoneInput from "react-phone-number-input/input";
 import "react-phone-number-input/style.css";
+import "./Home.css";
+import { Link } from "react-router-dom";
 
-const Home = ({ archivedData, setArchivedData }) => {
+const Home = ({ setArchivedData }) => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -37,13 +37,9 @@ const Home = ({ archivedData, setArchivedData }) => {
     const now = new Date();
     const itemsWithDueDate = data.filter((item) => {
       const returnedTime = new Date(item.returnedTime);
-      return (
-        returnedTime.getFullYear() === now.getFullYear() &&
-        returnedTime.getMonth() === now.getMonth() &&
-        returnedTime.getDate() === now.getDate()
-      );
+      return returnedTime > now;
     });
-  
+
     if (itemsWithDueDate.length > 0) {
       alert(
         `Qaytarilish vaqti o'tgan buyurtmalar mavjud Ismi: ${itemsWithDueDate
@@ -54,16 +50,11 @@ const Home = ({ archivedData, setArchivedData }) => {
           .map((item) => item.phoneNumbers.map((phone) => phone.number))
           .join(", ")}`
       );
-  
-     
     }
   }, [data]);
-  
+
   const addPhoneNumberRow = () => {
-    const newId =
-      newItem.phoneNumbers.length > 0
-        ? Math.max(...newItem.phoneNumbers.map(number => number.id)) + 1
-        : 1;
+    const newId = data.length > 0 ? data.length + 1 : 1;
 
     setNewItem({
       ...newItem,
@@ -73,10 +64,13 @@ const Home = ({ archivedData, setArchivedData }) => {
 
   const calculateTotalSum = () => {
     let totalSum = 0;
-    visibleData.forEach(item => {
+    data.forEach((item) => {
       totalSum += parseFloat(item.summa);
     });
-    return totalSum;
+    return totalSum.toLocaleString("uz-UZ", {
+      style: "currency",
+      currency: "UZS",
+    });
   };
 
   const cancelDelete = () => {
@@ -85,7 +79,7 @@ const Home = ({ archivedData, setArchivedData }) => {
   };
 
   const confirmDelete = () => {
-    const updatedData = data.filter(item => item.id !== itemToDeleteId);
+    const updatedData = data.filter((item) => item.id !== itemToDeleteId);
     setData(updatedData);
 
     setShowDeleteConfirmation(false);
@@ -108,9 +102,9 @@ const Home = ({ archivedData, setArchivedData }) => {
     const updatedData = [
       ...data,
       {
-        id: Math.random().toString(36).substr(2, 9), // Random ID
+        id: generateId(data.length),
         ...newItem,
-        summa: parseFloat(newItem.summa), // Convert summa to float
+        summa: parseFloat(newItem.summa),
       },
     ];
 
@@ -132,13 +126,13 @@ const Home = ({ archivedData, setArchivedData }) => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     setItemToDeleteId(id);
     setShowDeleteConfirmation(true);
   };
 
-  const handleEdit = id => {
-    const itemToEdit = data.find(item => item.id === id);
+  const handleEdit = (id) => {
+    const itemToEdit = data.find((item) => item.id === id);
 
     setEditingItemId(id);
     setNewItem({
@@ -150,10 +144,10 @@ const Home = ({ archivedData, setArchivedData }) => {
     setShowModal(true);
   };
 
-  const handleRemovePhoneNumber = phoneNumberId => {
+  const handleRemovePhoneNumber = (phoneNumberId) => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
-        phoneNumber => phoneNumber.id !== phoneNumberId
+        (phoneNumber) => phoneNumber.id !== phoneNumberId
       );
       setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
     }
@@ -171,7 +165,7 @@ const Home = ({ archivedData, setArchivedData }) => {
       return;
     }
 
-    const updatedData = data.map(item =>
+    const updatedData = data.map((item) =>
       item.id === editingItemId ? { ...newItem, summa: parseFloat(newItem.summa) } : item
     );
     setData(updatedData);
@@ -181,10 +175,10 @@ const Home = ({ archivedData, setArchivedData }) => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  const handleSearch = query => {
+  const handleSearch = (query) => {
     setSearchQuery(query);
     const filteredData = data.filter(
-      item =>
+      (item) =>
         item.name.toLowerCase().includes(query.toLowerCase()) ||
         item.summa.toString().includes(query.toLowerCase()) ||
         item.manzil.toLowerCase().includes(query.toLowerCase()) ||
@@ -193,10 +187,10 @@ const Home = ({ archivedData, setArchivedData }) => {
     setVisibleData(rearrangeData(filteredData).slice(0, 10));
   };
 
-  const rearrangeData = data => {
+  const rearrangeData = (data) => {
     const newData = [];
     const idMap = {};
-    data.forEach(item => {
+    data.forEach((item) => {
       if (!idMap[item.id]) {
         idMap[item.id] = true;
         newData.push(item);
@@ -205,34 +199,32 @@ const Home = ({ archivedData, setArchivedData }) => {
     return newData;
   };
 
+  const generateId = (index) => {
+    return index + 1;
+  };
+
   return (
     <div className="container">
-   
-      <h2>
+      <h2 className="total-sum">
         Jami Summa:{" "}
         {calculateTotalSum().toLocaleString("uz-UZ", {
           style: "currency",
           currency: "UZS",
         })}
       </h2>
-      {/* <Link className="link" to="/archive">
-        Arxivga o'tish
-      </Link> */}
-
+      <Link to="/products">Products</Link>
       <div className="search__box">
         <input
           type="text"
           placeholder="Qidiruv..."
           value={searchQuery}
-          onChange={e => handleSearch(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
           className="search-input"
         />
-
         <button className="add__button" onClick={() => setShowModal(true)}>
           ➕ Qo'shish
         </button>
       </div>
-
       <table className="rwd-table">
         <tbody>
           <tr>
@@ -245,15 +237,11 @@ const Home = ({ archivedData, setArchivedData }) => {
             <th>Telefon raqam</th>
             <th>Amallar</th>
           </tr>
-          {visibleData.map(item => (
+          {visibleData.map((item) => (
             <tr
               key={item.id}
               style={{
-                backgroundColor:
-                  new Date(item.returnedTime).toDateString() ===
-                  new Date().toDateString()
-                    ? "#FF8E8E"
-                    : "white",
+                backgroundColor: new Date(item.returnedTime) > new Date() && item.id !== editingItemId ? "#FF8E8E" : "white",
               }}
             >
               <td data-th="ID">{item.id}</td>
@@ -303,7 +291,7 @@ const Home = ({ archivedData, setArchivedData }) => {
                 className="telefon-raqam"
                 style={{ display: "flex", flexDirection: "column" }}
               >
-                {item.phoneNumbers.map(phoneNumber => (
+                {item.phoneNumbers.map((phoneNumber) => (
                   <div key={phoneNumber.id}>
                     <input
                       className="telefon-raqam-inp"
@@ -311,8 +299,8 @@ const Home = ({ archivedData, setArchivedData }) => {
                       readOnly
                       placeholder="Telefon raqam"
                       value={phoneNumber.number}
-                      onChange={e => {
-                        const updatedNumbers = newItem.phoneNumbers.map(num =>
+                      onChange={(e) => {
+                        const updatedNumbers = newItem.phoneNumbers.map((num) =>
                           num.id === phoneNumber.id ? { ...num, number: e.target.value } : num
                         );
                         setNewItem({
@@ -352,27 +340,27 @@ const Home = ({ archivedData, setArchivedData }) => {
               type="text"
               value={newItem.name}
               maxLength={40}
-              onChange={e => setNewItem({ ...newItem, name: e.target.value })}
+              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             />
             <label>Summa:</label>
             <input
               type="number"
               value={newItem.summa}
-              onChange={e => setNewItem({ ...newItem, summa: e.target.value })}
+              onChange={(e) => setNewItem({ ...newItem, summa: e.target.value })}
             />
             <input
               type="text"
               placeholder="Manzil"
               value={newItem.manzil}
               maxLength={40}
-              onChange={e => setNewItem({ ...newItem, manzil: e.target.value })}
+              onChange={(e) => setNewItem({ ...newItem, manzil: e.target.value })}
             />
             <label>Berilish vaqti:</label>
             <DatePicker
               className="vaqt"
               placeholderText="Sana tanlang"
               selected={newItem.userProvidedTime}
-              onChange={date => setNewItem({ ...newItem, userProvidedTime: date })}
+              onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
               locale="ru" // Rus tilida
             />
             <label>Qaytarilish vaqti:</label>
@@ -381,18 +369,18 @@ const Home = ({ archivedData, setArchivedData }) => {
               className="vaqt"
               placeholderText="Sana tanlang"
               selected={newItem.returnedTime}
-              onChange={date => setNewItem({ ...newItem, returnedTime: date })}
+              onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
               locale="ru" // Rus tilida
             />
             <div>
-              {newItem.phoneNumbers.map(phoneNumber => (
+              {newItem.phoneNumbers.map((phoneNumber) => (
                 <div key={phoneNumber.id}>
                   <PhoneInput
                     placeholder="Telefon raqam"
                     className="telefon-raqam-kiritish"
                     value={phoneNumber.number}
-                    onChange={value => {
-                      const updatedNumbers = newItem.phoneNumbers.map(num =>
+                    onChange={(value) => {
+                      const updatedNumbers = newItem.phoneNumbers.map((num) =>
                         num.id === phoneNumber.id ? { ...num, number: value } : num
                       );
                       setNewItem({ ...newItem, phoneNumbers: updatedNumbers });

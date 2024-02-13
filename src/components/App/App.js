@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home/Home";
-import Archive from "../Archive/Archive";
+import Products from "../ProductPrice/Product"
 import Parol from "../Parol/Parol";
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
           )
         }
       />
-      <Route path="/archive" element={<Archive />} />
+      <Route path="/products" element={<Products />} />
     </Routes>
   );
 }
