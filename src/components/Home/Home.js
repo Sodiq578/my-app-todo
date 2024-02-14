@@ -289,7 +289,7 @@ const Home = ({ setArchivedData }) => {
               style={{
                 backgroundColor:
                   showModal || item.id === itemToDeleteId
-                    ? "#00000080"
+                    ? "goldenrod"
                     : new Date(item.returnedTime) > new Date() &&
                       item.id !== editingItemId
                     ? "#FF8E8E"
