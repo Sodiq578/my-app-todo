@@ -22,6 +22,11 @@ const Home = ({ setArchivedData }) => {
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleData, setVisibleData] = useState([]);
+
+  
+  const ata = JSON.parse(localStorage.getItem("yourDataKey")) || [];
+  console.log(ata, "dasa");
+  console.log(visibleData);
   const daysInUzbek = [
     "Yakshanba",
     "Dushanba",
@@ -56,12 +61,12 @@ const Home = ({ setArchivedData }) => {
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("yourDataKey")) || [];
     setData(storedData);
-    setVisibleData(rearrangeData(storedData));
+    setVisibleData(storedData);
   }, []);
 
-  useEffect(() => {
-    setVisibleData(rearrangeData(data).slice(0, 10));
-  }, [data]);
+  // useEffect(() => {
+  //   setVisibleData(rearrangeData(data).slice(0, 10));
+  // }, [data]);
 
   useEffect(() => {
     const now = new Date();
@@ -278,7 +283,7 @@ const Home = ({ setArchivedData }) => {
             <th>Telefon raqam</th>
             <th>Amallar</th>
           </tr>
-          {visibleData.map((item) => (
+          {visibleData.map((item, index) => (
             <tr
               key={item.id}
               style={{
@@ -291,7 +296,7 @@ const Home = ({ setArchivedData }) => {
                     : "white",
               }}
             >
-              <td data-th="ID">{item.id}</td>
+              <td data-th="ID">{index + 1}</td>
               <td data-th="Ism">
                 <div>
                   <span className="ism">{item.name}</span>
@@ -308,19 +313,21 @@ const Home = ({ setArchivedData }) => {
                 </div>
               </td>
               <td data-th="Berilish vaqt">
-  {formatDate(new Date(item.userProvidedTime))}, {new Date(item.userProvidedTime).getFullYear()} yil, soat{" "}
-  {new Date(item.userProvidedTime).toLocaleTimeString("uz-UZ", {
-    hour: "numeric",
-    minute: "numeric",
-  })}
-</td>
-<td data-th="Qaytarilish vaqti">
-  {formatDate(new Date(item.returnedTime))}, {new Date(item.returnedTime).getFullYear()} yil, soat{" "}
-  {new Date(item.returnedTime).toLocaleTimeString("uz-UZ", {
-    hour: "numeric",
-    minute: "numeric",
-  })}
-</td>
+                {formatDate(new Date(item.userProvidedTime))},{" "}
+                {new Date(item.userProvidedTime).getFullYear()} yil, soat{" "}
+                {new Date(item.userProvidedTime).toLocaleTimeString("uz-UZ", {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </td>
+              <td data-th="Qaytarilish vaqti">
+                {formatDate(new Date(item.returnedTime))},{" "}
+                {new Date(item.returnedTime).getFullYear()} yil, soat{" "}
+                {new Date(item.returnedTime).toLocaleTimeString("uz-UZ", {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </td>
 
               <td
                 data-th="Telefon raqamlar"
