@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home/Home";
-import Products from "../ProductPrice/Product"
+import Products from "../ProductPrice/Product";
 import Parol from "../Parol/Parol";
+import Header from "../../layout/Header";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -24,19 +25,22 @@ function App() {
   };
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          loggedIn ? (
-            <Home />
-          ) : (
-            <Parol onLogin={(password) => handleLogin(password)} />
-          )
-        }
-      />
-      <Route path="/products" element={<Products />} />
-    </Routes>
+    <>
+      {/* Header komponentini barcha sahifalarda chaqiramiz */}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            loggedIn ? (
+              <Home />
+            ) : (
+              <Parol onLogin={(password) => handleLogin(password)} />
+            )
+          }
+        />
+        <Route path="/products" element={<Products />} />
+      </Routes>
+    </>
   );
 }
 

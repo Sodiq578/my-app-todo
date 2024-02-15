@@ -5,6 +5,7 @@ import PhoneInput from "react-phone-number-input/input";
 import "react-phone-number-input/style.css";
 import "./Home.css";
 import { Link } from "react-router-dom";
+import Header from "../../layout/Header";
 
 const Home = ({ setArchivedData }) => {
   const [data, setData] = useState([]);
@@ -23,7 +24,6 @@ const Home = ({ setArchivedData }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleData, setVisibleData] = useState([]);
 
-  
   const ata = JSON.parse(localStorage.getItem("yourDataKey")) || [];
   console.log(ata, "dasa");
   console.log(visibleData);
@@ -250,15 +250,16 @@ const Home = ({ setArchivedData }) => {
   };
 
   return (
+ <div>
+     <Header />
     <div className="container">
       <h2 className="total-sum">
         Jami Summa:{" "}
         {calculateTotalSum().toLocaleString("uz-UZ", {
-          style: "currency",
           currency: "UZS",
         })}
       </h2>
-      <Link to="/products">Products</Link>
+   
       <div className="search__box">
         <input
           type="text"
@@ -287,13 +288,11 @@ const Home = ({ setArchivedData }) => {
             <tr
               key={item.id}
               style={{
-                backgroundColor:
-                  showModal || item.id === itemToDeleteId
-                    ? "goldenrod"
-                    : new Date(item.returnedTime) > new Date() &&
-                      item.id !== editingItemId
-                    ? "#FF8E8E"
-                    : "white",
+                backgroundColor: showModal || item.id === itemToDeleteId
+                  ? "#9395D3"
+                  : new Date(item.returnedTime) > new Date() && item.id !== editingItemId
+                  ? "#FF8E8E"
+                  : "white",
               }}
             >
               <td data-th="ID">{index + 1}</td>
@@ -387,6 +386,7 @@ const Home = ({ setArchivedData }) => {
               type="text"
               value={newItem.name}
               maxLength={40}
+              
               onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             />
             <label>Summa:</label>
@@ -397,9 +397,10 @@ const Home = ({ setArchivedData }) => {
                 setNewItem({ ...newItem, summa: e.target.value })
               }
             />
+            <label>Manzil</label>
             <input
               type="text"
-              placeholder="Manzil"
+             
               value={newItem.manzil}
               maxLength={40}
               onChange={(e) =>
@@ -429,7 +430,7 @@ const Home = ({ setArchivedData }) => {
             />
             <div>
               {newItem.phoneNumbers.map((phoneNumber) => (
-                <div key={phoneNumber.id}>
+                <div className="modal__buttons-box" key={phoneNumber.id}>
                   <PhoneInput
                     placeholder="Telefon raqam"
                     className="telefon-raqam-kiritish"
@@ -447,21 +448,21 @@ const Home = ({ setArchivedData }) => {
                     <button
                       onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
                     >
-                      Olib tashlash
+                    Telefon raqamni  Olib tashlash ➖
                     </button>
                   )}
                 </div>
               ))}
               <button onClick={addPhoneNumberRow}>
-                Telefon raqam qo'shish
+                Telefon raqam qo'shish  📞 ➕
               </button>
             </div>
             {editingItemId ? (
               <button onClick={handleSaveEdit}>Tahrirni saqlash</button>
             ) : (
-              <button onClick={handleAdd}>Saqlash</button>
+              <button onClick={handleAdd}>Saqlash ✅</button>
             )}
-            <button onClick={() => setShowModal(false)}>Bekor qilish</button>
+            <button className="bekorqilish" onClick={() => setShowModal(false)}>Bekor qilish</button>
           </div>
         </div>
       )}
@@ -475,6 +476,7 @@ const Home = ({ setArchivedData }) => {
         </div>
       )}
     </div>
+ </div>
   );
 };
 

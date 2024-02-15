@@ -11,7 +11,7 @@
   }
   
   .modal-content {
-    background-color: #fefefe;
+    
     margin: 15% auto; 
     padding: 20px;
     border: 1px solid #888;
@@ -19,7 +19,7 @@
   }
   
   .close {
-    color: #aaa;
+    
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -39,6 +39,8 @@
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
     margin: 20px;
+    margin: 0 auto;
+    margin-top: 50px !important;
   }
   
   .personal-styles {
@@ -181,3 +183,611 @@
   }
 
 
+  .modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* justify-content: center; */
+      /* margin: 0 auto; */
+      margin-left: 0px;
+  }
+  
+
+
+
+  @import 'https://fonts.googleapis.com/css?family=Open+Sans:600,700';
+
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body{
+  background-size: cover; /* Rasmni to'liq qamrab olmasligi uchun */
+  background-position: center; /* Rasmning o'rtasiga joylashish */
+  /* background-image: url('../../images/pul24.jpg') !important;  */
+ 
+}
+/* Table */
+.rwd-table {
+  margin: auto;
+  min-width: 300px;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+.rwd-table tr:first-child {
+  border-top: none;
+  background: #42caca !important;
+  color: #fff;
+}
+
+.rwd-table tr {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: #f5f9fc;
+}
+
+.rwd-table tr:nth-child(odd):not(:first-child) {
+  background-color: #ebf3f9;
+}
+
+.rwd-table th {
+  display: none;
+}
+
+.rwd-table td {
+  display: block;
+}
+
+.rwd-table td:first-child {
+  margin-top: .5em;
+}
+
+.rwd-table td:last-child {
+  margin-bottom: .5em;
+}
+
+.rwd-table td:before {
+  content: attr(data-th) ": ";
+  font-weight: bold;
+  width: 120px;
+  display: inline-block;
+  color: #000;
+}
+
+.rwd-table th,
+.rwd-table td {
+  text-align: left;
+}
+
+.rwd-table {
+  color: #333;
+  border-radius: .4em;
+  overflow: hidden;
+}
+
+.rwd-table tr {
+  border-color: #bfbfbf;
+}
+
+.rwd-table th,
+.rwd-table td {
+  padding: .5em 1em;
+}
+
+@media screen and (max-width: 601px) {
+  .rwd-table tr:nth-child(2) {
+    border-top: none;
+    margin: 0 auto;
+  }
+
+}
+
+@media screen and (max-width: 500px) {
+
+  
+  tbody tr {
+    margin: 20px 0 !important;
+  }
+}
+
+
+@media screen and (min-width: 600px) {
+  .container h2{
+    margin: 0 auto;
+    background-color: gren;
+  }
+  .rwd-table tr:hover:not(:first-child) {
+    background-color: #d8e7f3;
+  }
+  .rwd-table td:before {
+    display: none;
+  }
+  .rwd-table th,
+  .rwd-table td {
+    display: table-cell;
+    padding: .25em .5em;
+  }
+  .rwd-table th:first-child,
+  .rwd-table td:first-child {
+    padding-left: 0;
+  }
+  .rwd-table th:last-child,
+  .rwd-table td:last-child {
+    padding-right: 0;
+  }
+  .rwd-table th,
+  .rwd-table td {
+    padding: 1em !important;
+  }
+  
+  tbody tr {
+    margin: 20px 0 !important;
+  }
+  .total-sum{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto !important;
+    padding-right: 0px !important;
+    text-align: center;
+  }
+  .modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      /* justify-content: center; */
+      /* margin: 0 auto; */
+      margin-left: 50% !important;
+  }
+  
+}
+
+/* Basic Styling */
+.parol-container {
+  background-image: url('../../images/qul2.jpg'); /* Rasmini joylang */
+  background-size: cover; /* Rasmi to'liq qoplansin */
+  background-position: center; /* Rasmi o'rta bo'ylab joylang */
+}
+
+
+h1 {
+  text-align: center;
+  font-size: 2.4em;
+  color: #f2f2f2;
+}
+
+.container {
+  display: block;
+  text-align: center;
+}
+
+h3 {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  font-size: 1.5em;
+  color: #cecece;
+}
+
+h3:before {
+  content: "\25C0";
+  position: absolute;
+  left: -50px;
+  -webkit-animation: leftRight 2s linear infinite;
+  animation: leftRight 2s linear infinite;
+}
+
+h3:after {
+  content: "\25b6";
+  position: absolute;
+  right: -50px;
+  -webkit-animation: leftRight 2s linear infinite reverse;
+  animation: leftRight 2s linear infinite reverse;
+}
+
+@-webkit-keyframes leftRight {
+  0%    { -webkit-transform: translateX(0)}
+  25%   { -webkit-transform: translateX(-10px)}
+  75%   { -webkit-transform: translateX(10px)}
+  100%  { -webkit-transform: translateX(0)}
+}
+
+@keyframes leftRight {
+  0%    { transform: translateX(0)}
+  25%   { transform: translateX(-10px)}
+  75%   { transform: translateX(10px)}
+  100%  { transform: translateX(0)}
+}
+
+/* Modal */
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  padding: 10px 20px !important;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Additional Button Styles */
+.add__button {
+  background-color: #428bca;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add__button:hover {
+  background-color: #45a049;
+}
+
+/* Additional Link Styles */
+.link {
+  background-color: rgb(0, 55, 255);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.link:hover {
+  background-color: rgb(0, 45, 205);
+}
+
+/* Additional Table Styles */
+td button {
+  background-color: #4c63af;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 12px;
+}
+
+td button:hover {
+  background-color: #7a45a0;
+}
+
+/* Additional Input Styles */
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+}
+
+/* Additional Button Styles */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.search-input {
+  width: 30% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  padding: auto;
+}
+
+.add__button{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.search__box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-around;
+
+}
+.telefon-raqam{
+  margin-top: 25px;
+}
+
+
+.telefon-raqam-inp{
+  background-color: white;
+  border: none;
+  
+}
+
+
+.telefon-raqam-inp {
+  width: 100%; /* Inputning to'liq eni */
+  padding: 8px; /* Haroratlash uchun o'lchamlar */
+  border: 1px solid #ccc; /* Inputning chetida ramka */
+  border-radius: 4px; /* Inputning kengaytmasi */
+  margin-bottom: 10px; /* Pastga bo'shliq qoldirish */
+  box-sizing: border-box; /* Border va padding ni hisoblash usuli */
+}
+
+/* Agar kerak bo'lsa, inputga ishora qilib ko'rsatiladigan stil */
+.telefon-raqam-inp:focus {
+  outline: none; /* Fokus bilan bog'liq chiziqni o'chirish */
+  border-color: #007bff; /* Fokuslangan input uchun ramka rangi */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Fokuslangan input uchun kengaytma */
+}
+
+.vaqt{
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #d60707;
+}
+
+.telefon-raqam-kiritish{
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+}
+
+
+.vaqt {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+}
+
+
+.container h2{
+  color: red;
+  text-align: right;
+  padding-right: 100px;
+}
+
+
+.ismdagi {
+  font-weight: bold;
+  color: blue;
+}
+
+.mazilga {
+  font-style: italic;
+  color: green;
+}
+
+.qolganlariga {
+  text-decoration: underline;
+  color: purple;
+}
+
+
+
+.modal-content button{
+border-radius: 10px;
+background-color: #00d5ff;
+}
+
+.bekorqilish{
+  background-color: red !important;
+}
+
+
+/* Product.css */
+
+/* Modal styles */
+.modal {
+  display: none; /* Modal default hidden */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Table styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table__row {
+  border-bottom: 1px solid #ddd;
+}
+
+.table__header {
+  /* background-color: #f2f2f2; */
+  font-weight: bold;
+}
+
+.table__header__cell,
+.table__cell {
+  padding: 8px;
+  text-align: left;
+}
+
+/* Add and Delete button styles */
+.add_product,
+.edit-button,
+.delete-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.add_product:hover,
+.edit-button:hover,
+.delete-button:hover {
+  background-color: #45a049;
+}
+
+.add_product:active,
+.edit-button:active,
+.delete-button:active {
+  background-color: #3e8e41;
+}
+
+
+button{
+  background-color: #007bff !important;
+} .modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0); /* Set background color to transparent */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 20% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.modal-content input {
+  margin-bottom: 10px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-buttons-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bekorqilish {
+  background-color: red;
+  color: white;
+}
+
+.editDollar{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}

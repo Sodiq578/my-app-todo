@@ -1,6 +1,6 @@
 /* Parol.css */
 body {
-  background-image: url('../../images/qul2.jpg');
+  /* background-image: url('../../images/qul2.jpg'); */
   background-repeat: no-repeat; /* Rasim takrorlanmasin */
   background-size: cover; /* To'liq ekanni qoplasin */
 }
@@ -26,7 +26,7 @@ body {
 
 .parol-container h2 {
   font-size: 24px;
-  margin-bottom: 20px;
+
 }
 
 .parol-container input[type="password"],
