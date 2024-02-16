@@ -1,3 +1,4 @@
+// Header.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
@@ -11,7 +12,7 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Modal menüyü kapatmak için fonksiyon
+  // Modal menyuni yopish uchun funksiya
   const closeMenu = () => {
     setMenuOpen(false);
   };
@@ -34,6 +35,12 @@ const Header = () => {
           <li className="header-item">
             <Link to="/products" className="header-links" onClick={closeMenu}>
               Mahsulotlar
+            </Link>
+          </li>
+
+          <li className="header-item">
+            <Link to="/qarzlarim" className="header-links" onClick={closeMenu}> {/* Yo'l uchun "qarzlarim" ni ishlatamiz */}
+              Qarzlarim
             </Link>
           </li>
         </ul>

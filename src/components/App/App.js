@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home/Home";
-import Products from "../ProductPrice/Product";
+import Products from "../ProductPrice/Products";
 import Parol from "../Parol/Parol";
 import Header from "../../layout/Header";
+import Qarzlarim from "../Qarzlarim/Qarzlarim";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -39,6 +40,7 @@ function App() {
           }
         />
         <Route path="/products" element={<Products />} />
+        <Route path="/qarzlarim" element={<Qarzlarim />} />
       </Routes>
     </>
   );

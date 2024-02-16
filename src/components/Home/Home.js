@@ -24,9 +24,6 @@ const Home = ({ setArchivedData }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleData, setVisibleData] = useState([]);
 
-  const ata = JSON.parse(localStorage.getItem("yourDataKey")) || [];
-  console.log(ata, "dasa");
-  console.log(visibleData);
   const daysInUzbek = [
     "Yakshanba",
     "Dushanba",
@@ -64,10 +61,6 @@ const Home = ({ setArchivedData }) => {
     setVisibleData(storedData);
   }, []);
 
-  // useEffect(() => {
-  //   setVisibleData(rearrangeData(data).slice(0, 10));
-  // }, [data]);
-
   useEffect(() => {
     const now = new Date();
     const itemsWithDueDate = data.filter((item) => {
@@ -89,7 +82,10 @@ const Home = ({ setArchivedData }) => {
   }, [data]);
 
   const addPhoneNumberRow = () => {
-    const newId = data.length > 0 ? data.length + 1 : 1;
+    const newId =
+      newItem.phoneNumbers.length > 0
+        ? newItem.phoneNumbers[newItem.phoneNumbers.length - 1].id + 1
+        : 1;
 
     setNewItem({
       ...newItem,
@@ -141,10 +137,12 @@ const Home = ({ setArchivedData }) => {
   const handleAdd = () => {
     if (
       newItem.name.trim() === "" ||
-      newItem.summa.trim() === "" ||
+      isNaN(parseFloat(newItem.summa)) ||
       newItem.manzil.trim() === ""
     ) {
-      alert("Iltimos, barcha kerakli maydonlarni to'ldiring.");
+      alert(
+        "Iltimos, barcha kerakli maydonlarni to'ldiring va Summa uchun raqam kiriting."
+      );
       return;
     }
 
@@ -179,11 +177,12 @@ const Home = ({ setArchivedData }) => {
     const itemToEdit = data.find((item) => item.id === id);
 
     setEditingItemId(id);
-    setNewItem({
+    setNewItem((prevItem) => ({
+      ...prevItem,
       ...itemToEdit,
       userProvidedTime: new Date(itemToEdit.userProvidedTime),
       returnedTime: new Date(itemToEdit.returnedTime),
-    });
+    }));
 
     setShowModal(true);
   };
@@ -193,7 +192,7 @@ const Home = ({ setArchivedData }) => {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
         (phoneNumber) => phoneNumber.id !== phoneNumberId
       );
-      setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
+      setNewItem((prevItem) => ({ ...prevItem, phoneNumbers: updatedPhoneNumbers }));
     }
   };
 
@@ -202,10 +201,12 @@ const Home = ({ setArchivedData }) => {
 
     if (
       newItem.name.trim() === "" ||
-      newItem.summa.toString().trim() === "" ||
+      isNaN(parseFloat(newItem.summa)) ||
       newItem.manzil.trim() === ""
     ) {
-      alert("Iltimos, barcha kerakli maydonlarni to'ldiring.");
+      alert(
+        "Iltimos, barcha kerakli maydonlarni to'ldiring va Summa uchun raqam kiriting."
+      );
       return;
     }
 
@@ -250,233 +251,233 @@ const Home = ({ setArchivedData }) => {
   };
 
   return (
- <div>
-     <Header />
-    <div className="container">
-      <h2 className="total-sum">
-        Jami Summa:{" "}
-        {calculateTotalSum().toLocaleString("uz-UZ", {
-          currency: "UZS",
-        })}
-      </h2>
-   
-      <div className="search__box">
-        <input
-          type="text"
-          placeholder="Qidiruv..."
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="search-input"
-        />
-        <button className="add__button" onClick={() => setShowModal(true)}>
-          ➕ Qo'shish
-        </button>
-      </div>
-      <table className="rwd-table">
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <th>Ism</th>
-            <th>Summa</th>
-            <th>Manzil</th>
-            <th>Berilish vaqt</th>
-            <th>Qaytarilish vaqti</th>
-            <th>Telefon raqam</th>
-            <th>Amallar</th>
-          </tr>
-          {visibleData.map((item, index) => (
-            <tr
-              key={item.id}
-              style={{
-                backgroundColor: showModal || item.id === itemToDeleteId
-                  ? "#9395D3"
-                  : new Date(item.returnedTime) > new Date() && item.id !== editingItemId
-                  ? "#FF8E8E"
-                  : "white",
-              }}
-            >
-              <td data-th="ID">{index + 1}</td>
-              <td data-th="Ism">
-                <div>
-                  <span className="ism">{item.name}</span>
-                </div>
-              </td>
-              <td data-th="Summa">
-                <div>
-                  <p>{item.summa.toLocaleString("uz-UZ")} so'm</p>
-                </div>
-              </td>
-              <td data-th="Manzil">
-                <div>
-                  <p>{item.manzil}</p>
-                </div>
-              </td>
-              <td data-th="Berilish vaqt">
-                {formatDate(new Date(item.userProvidedTime))},{" "}
-                {new Date(item.userProvidedTime).getFullYear()} yil, soat{" "}
-                {new Date(item.userProvidedTime).toLocaleTimeString("uz-UZ", {
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
-              </td>
-              <td data-th="Qaytarilish vaqti">
-                {formatDate(new Date(item.returnedTime))},{" "}
-                {new Date(item.returnedTime).getFullYear()} yil, soat{" "}
-                {new Date(item.returnedTime).toLocaleTimeString("uz-UZ", {
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
-              </td>
-
-              <td
-                data-th="Telefon raqamlar"
-                className="telefon-raqam"
-                style={{ display: "flex", flexDirection: "column" }}
+    <div>
+      <Header />
+      <div className="container">
+        <h2 className="total-sum">
+          Jami Summa:{" "}
+          {calculateTotalSum().toLocaleString("uz-UZ", {
+            currency: "UZS",
+          })}
+        </h2>
+        <div className="search__box">
+          <input
+            type="text"
+            placeholder="Qidiruv..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="search-input"
+          />
+          <button className="add__button" onClick={() => setShowModal(true)}>
+            ➕ Qo'shish
+          </button>
+        </div>
+        <table className="rwd-table">
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <th>Ism</th>
+              <th>Summa</th>
+              <th>Manzil</th>
+              <th>Berilish vaqt</th>
+              <th>Qaytarilish vaqti</th>
+              <th>Telefon raqam</th>
+              <th>Amallar</th>
+            </tr>
+            {visibleData.map((item, index) => (
+              <tr
+                key={item.id}
+                style={{
+                  backgroundColor:
+                    showModal || item.id === itemToDeleteId
+                      ? "#9395D3"
+                      : new Date(item.returnedTime) > new Date() &&
+                        item.id !== editingItemId
+                      ? "#FF8E8E"
+                      : "white",
+                }}
               >
-                {item.phoneNumbers.map((phoneNumber) => (
-                  <div key={phoneNumber.id}>
-                    <input
-                      className="telefon-raqam-inp"
-                      type="text"
-                      readOnly
+                <td data-th="ID">{index + 1}</td>
+                <td data-th="Ism">
+                  <div>
+                    <span className="ism">{item.name}</span>
+                  </div>
+                </td>
+                <td data-th="Summa">
+                  <div>
+                    <p>{item.summa.toLocaleString("uz-UZ")} so'm</p>
+                  </div>
+                </td>
+                <td data-th="Manzil">
+                  <div>
+                    <p>{item.manzil}</p>
+                  </div>
+                </td>
+                <td data-th="Berilish vaqt">
+                  {formatDate(new Date(item.userProvidedTime))},{" "}
+                  {new Date(item.userProvidedTime).getFullYear()} yil, soat{" "}
+                  {new Date(
+                    item.userProvidedTime
+                  ).toLocaleTimeString("uz-UZ", {
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </td>
+                <td data-th="Qaytarilish vaqti">
+                  {formatDate(new Date(item.returnedTime))},{" "}
+                  {new Date(item.returnedTime).getFullYear()} yil, soat{" "}
+                  {new Date(item.returnedTime).toLocaleTimeString("uz-UZ", {
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </td>
+                <td
+                  data-th="Telefon raqamlar"
+                  className="telefon-raqam"
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
+                  {item.phoneNumbers.map((phoneNumber) => (
+                    <div key={phoneNumber.id}>
+                      <input
+                        className="telefon-raqam-inp"
+                        type="text"
+                        readOnly
+                        placeholder="Telefon raqam"
+                        value={phoneNumber.number}
+                        onChange={(e) => {
+                          const updatedNumbers = newItem.phoneNumbers.map(
+                            (num) =>
+                              num.id === phoneNumber.id
+                                ? { ...num, number: e.target.value }
+                                : num
+                          );
+                          setNewItem({
+                            ...newItem,
+                            phoneNumbers: updatedNumbers,
+                          });
+                        }}
+                      />
+                      {showModal && (
+                        <button
+                          onClick={() =>
+                            handleRemovePhoneNumber(phoneNumber.id)
+                          }
+                        >
+                          Olib tashlash
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </td>
+                <td data-th="Amallar">
+                  <button onClick={() => handleEdit(item.id)}>
+                    <i className="fas fa-edit"></i> Tahrirlash
+                  </button>
+                  <button onClick={() => handleDelete(item.id)}>
+                    <i className="fas fa-trash-alt"></i> To'langan
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {showModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={() => setShowModal(false)}>
+                &times;
+              </span>
+              <label>Ism:</label>
+              <input
+                type="text"
+                value={newItem.name}
+                maxLength={40}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, name: e.target.value })
+                }
+              />
+              <label>Summa:</label>
+              <input
+                type="number"
+                value={newItem.summa}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, summa: e.target.value })
+                }
+              />
+              <label>Manzil</label>
+              <input
+                type="text"
+                value={newItem.manzil}
+                maxLength={40}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, manzil: e.target.value })
+                }
+              />
+              <label>Berilish vaqti:</label>
+              <DatePicker
+                className="vaqt"
+                placeholderText="Sana tanlang"
+                selected={newItem.userProvidedTime}
+                onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
+                locale="ru" // Rus tilida
+              />
+              <label>Qaytarilish vaqti:</label>
+              <DatePicker
+                className="vaqt"
+                placeholderText="Sana tanlang"
+                selected={newItem.returnedTime}
+                onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
+                locale="ru" // Rus tilida
+              />
+              <div>
+                {newItem.phoneNumbers.map((phoneNumber) => (
+                  <div className="modal__buttons-box" key={phoneNumber.id}>
+                    <PhoneInput
                       placeholder="Telefon raqam"
+                      className="telefon-raqam-kiritish"
                       value={phoneNumber.number}
-                      onChange={(e) => {
+                      onChange={(value) => {
                         const updatedNumbers = newItem.phoneNumbers.map((num) =>
                           num.id === phoneNumber.id
-                            ? { ...num, number: e.target.value }
+                            ? { ...num, number: value }
                             : num
                         );
-                        setNewItem({
-                          ...newItem,
-                          phoneNumbers: updatedNumbers,
-                        });
+                        setNewItem({ ...newItem, phoneNumbers: updatedNumbers });
                       }}
                     />
                     {showModal && (
                       <button
                         onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
                       >
-                        Olib tashlash
+                        Telefon raqamni Olib tashlash ➖
                       </button>
                     )}
                   </div>
                 ))}
-              </td>
-              <td data-th="Amallar">
-                <button onClick={() => handleEdit(item.id)}>
-                  <i className="fas fa-edit"></i> Tahrirlash
+                <button onClick={addPhoneNumberRow}>
+                  Telefon raqam qo'shish 📞 ➕
                 </button>
-                <button onClick={() => handleDelete(item.id)}>
-                  <i className="fas fa-trash-alt"></i> To'langan
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={() => setShowModal(false)}>
-              &times;
-            </span>
-            <label>Ism:</label>
-            <input
-              type="text"
-              value={newItem.name}
-              maxLength={40}
-              
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            />
-            <label>Summa:</label>
-            <input
-              type="number"
-              value={newItem.summa}
-              onChange={(e) =>
-                setNewItem({ ...newItem, summa: e.target.value })
-              }
-            />
-            <label>Manzil</label>
-            <input
-              type="text"
-             
-              value={newItem.manzil}
-              maxLength={40}
-              onChange={(e) =>
-                setNewItem({ ...newItem, manzil: e.target.value })
-              }
-            />
-            <label>Berilish vaqti:</label>
-            <DatePicker
-              className="vaqt"
-              placeholderText="Sana tanlang"
-              selected={newItem.userProvidedTime}
-              onChange={(date) =>
-                setNewItem({ ...newItem, userProvidedTime: date })
-              }
-              locale="ru" // Rus tilida
-            />
-            <label>Qaytarilish vaqti:</label>
-
-            <DatePicker
-              className="vaqt"
-              placeholderText="Sana tanlang"
-              selected={newItem.returnedTime}
-              onChange={(date) =>
-                setNewItem({ ...newItem, returnedTime: date })
-              }
-              locale="ru" // Rus tilida
-            />
-            <div>
-              {newItem.phoneNumbers.map((phoneNumber) => (
-                <div className="modal__buttons-box" key={phoneNumber.id}>
-                  <PhoneInput
-                    placeholder="Telefon raqam"
-                    className="telefon-raqam-kiritish"
-                    value={phoneNumber.number}
-                    onChange={(value) => {
-                      const updatedNumbers = newItem.phoneNumbers.map((num) =>
-                        num.id === phoneNumber.id
-                          ? { ...num, number: value }
-                          : num
-                      );
-                      setNewItem({ ...newItem, phoneNumbers: updatedNumbers });
-                    }}
-                  />
-                  {showModal && (
-                    <button
-                      onClick={() => handleRemovePhoneNumber(phoneNumber.id)}
-                    >
-                    Telefon raqamni  Olib tashlash ➖
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button onClick={addPhoneNumberRow}>
-                Telefon raqam qo'shish  📞 ➕
-              </button>
+              </div>
+              {editingItemId ? (
+                <button onClick={handleSaveEdit}>Tahrirni saqlash</button>
+              ) : (
+                <button onClick={handleAdd}>Saqlash ✅</button>
+              )}
+              <button className="bekorqilish" onClick={() => setShowModal(false)}>Bekor qilish</button>
             </div>
-            {editingItemId ? (
-              <button onClick={handleSaveEdit}>Tahrirni saqlash</button>
-            ) : (
-              <button onClick={handleAdd}>Saqlash ✅</button>
-            )}
-            <button className="bekorqilish" onClick={() => setShowModal(false)}>Bekor qilish</button>
           </div>
-        </div>
-      )}
-      {showDeleteConfirmation && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>Haqiqatan ham ushbu mijozni qarzi to'langanmi</p>
-            <button onClick={confirmDelete}>Ha</button>
-            <button onClick={cancelDelete}>Yo'q</button>
+        )}
+        {showDeleteConfirmation && (
+          <div className="modal">
+            <div className="modal-content">
+              <p>Haqiqatan ham ushbu mijozni qarzi to'langanmi</p>
+              <button onClick={confirmDelete}>Ha</button>
+              <button onClick={cancelDelete}>Yo'q</button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
- </div>
   );
 };
 
