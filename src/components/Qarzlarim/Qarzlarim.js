@@ -2,57 +2,83 @@ import React, { useState, useEffect } from "react";
 import "./Qarzlarim.css";
 import Header from "../../layout/Header";
 import DatePicker from "react-datepicker";
-import PhoneInput from "react-phone-number-input/input";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css"; // Stilni import qilish
 
 const Qarzlarim = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
-  const [name, setName] = useState('');
-  const [from, setFrom] = useState('');
-  const [productType, setProductType] = useState('');
+  const [name, setName] = useState("");
+  const [from, setFrom] = useState("");
+  const [productType, setProductType] = useState("");
   const [amount, setAmount] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
   const [receivedAt, setReceivedAt] = useState(new Date());
   const [lastGivenAmount, setLastGivenAmount] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
-  
+
   useEffect(() => {
     try {
-      const savedData = localStorage.getItem('tableData');
+      const savedData = localStorage.getItem("tableData");
       if (savedData) {
         setTableData(JSON.parse(savedData));
       }
     } catch (error) {
-      console.error('JSON parse xatosi:', error);
+      console.error("JSON parse xatosi:", error);
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("tableData", JSON.stringify(tableData));
+  }, [tableData]);
+
   const confirmDelete = () => {
     if (itemToDeleteId !== null) {
-      const updatedData = tableData.filter((item) => item.id !== itemToDeleteId);
+      const updatedData = tableData.filter(
+        (item) => item.id !== itemToDeleteId
+      );
       setTableData(updatedData);
       setShowDeleteConfirmation(false);
       setItemToDeleteId(null);
-      localStorage.setItem("tableData", JSON.stringify(updatedData));
     }
   };
 
   const handleAdd = () => {
     if (editingItemId !== null) {
-      const updatedData = tableData.map(item => {
+      const updatedData = tableData.map((item) => {
         if (item.id === editingItemId) {
-          return { ...item, name, from, productType, amount, remainingAmount, receivedAt, lastGivenAmount, phoneNumber };
+          return {
+            ...item,
+            name,
+            from,
+            productType,
+            amount,
+            remainingAmount,
+            receivedAt,
+            lastGivenAmount,
+            phoneNumber,
+          };
         }
         return item;
       });
       setTableData(updatedData);
       setEditingItemId(null);
     } else {
-      const newData = { id: Date.now(), name, from, productType, amount, remainingAmount, receivedAt, lastGivenAmount, phoneNumber };
+      const newData = {
+        id: Date.now(),
+        name,
+        from,
+        productType,
+        amount,
+        remainingAmount,
+        receivedAt,
+        lastGivenAmount,
+        phoneNumber,
+      };
       setTableData([...tableData, newData]);
     }
     closeModal();
@@ -92,25 +118,53 @@ const Qarzlarim = () => {
   };
 
   const clearInputs = () => {
-    setName('');
-    setFrom('');
-    setProductType('');
+    setName("");
+    setFrom("");
+    setProductType("");
     setAmount(0);
     setRemainingAmount(0);
     setReceivedAt(new Date());
     setLastGivenAmount(0);
-    setPhoneNumber('');
+    setPhoneNumber("");
   };
 
-  const calculateTotalSum = () => {
-    let totalSum = 0;
-    tableData.forEach((item) => {
-      totalSum += parseFloat(item.summa);
-    });
-    return totalSum.toLocaleString("uz-UZ", {
-      style: "currency",
-      currency: "UZS",
-    });
+  const handleInputChange = (field, value) => {
+    switch (field) {
+      case "name":
+        setName(value);
+        break;
+      case "from":
+        setFrom(value);
+        break;
+      case "productType":
+        setProductType(value);
+        break;
+      case "amount":
+        setAmount(parseInt(value));
+        break;
+      case "lastGivenAmount":
+        setLastGivenAmount(parseInt(value));
+        break;
+      case "remainingAmount":
+        setRemainingAmount(parseInt(value));
+        break;
+      case "receivedAt":
+        setReceivedAt(value);
+        break;
+      case "phoneNumber":
+        setPhoneNumber(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleDateChange = (date) => {
+    setReceivedAt(date);
+  };
+
+  const handlePhoneChange = (phone) => {
+    setPhoneNumber(phone);
   };
 
   const handleDelete = (id) => {
@@ -121,7 +175,7 @@ const Qarzlarim = () => {
   };
 
   const handleEdit = (id) => {
-    const itemToEdit = tableData.find(item => item.id === id);
+    const itemToEdit = tableData.find((item) => item.id === id);
     setName(itemToEdit.name);
     setFrom(itemToEdit.from);
     setProductType(itemToEdit.productType);
@@ -140,36 +194,93 @@ const Qarzlarim = () => {
       <div className="container">
         <div className="searchbtn-box">
           <input type="text" placeholder="Izlash..." onChange={handleSearch} />
-          <button onClick={openModal}>Qo'shish</button>
+          <button onClick={openModal}>Qo'shish ➕</button>
         </div>
-   
+
         {isModalOpen && (
           <div className="modal">
             <div className="modal-content">
-              <span className="close" onClick={closeModal}>&times;</span>
-              <input type="text" value={name} placeholder="Ism" onChange={(e) => setName(e.target.value)} />
-              <input type="text" value={from} placeholder="Qayerdan" onChange={(e) => setFrom(e.target.value)} />
-              <input type="text" value={productType} placeholder="Maxsulot turi" onChange={(e) => setProductType(e.target.value)} />
-              <input type="number" value={amount} placeholder="Summasi" onChange={(e) => setAmount(parseInt(e.target.value))} />
-              <input type="number" value={remainingAmount} placeholder="Qolgan summa" onChange={(e) => setRemainingAmount(parseInt(e.target.value))} />
-              <DatePicker
-                className="vaqt"
-                placeholderText="Olingan vaqti"
-                selected={receivedAt}
-                onChange={(date) => setReceivedAt(date)}
-                locale="uz" 
-              />
-              <input type="number" value={lastGivenAmount} placeholder="Oxirig berilagan summa" onChange={(e) => setLastGivenAmount(parseInt(e.target.value))} />
-              <PhoneInput
-                placeholder="Telefon raqami"
-                value={phoneNumber}
-                onChange={(phone) => setPhoneNumber(phone)}
-                defaultCountry="UZ" 
-              />
-              <button onClick={handleAdd}>Saqlash</button>
+              <span className="close" onClick={closeModal}>
+                &times;
+              </span>
+              <div>
+                <div>Ism</div>
+                <input
+                  type="text"
+                  value={name}
+                  placeholder="Ism"
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Qayerdan</div>
+                <input
+                  type="text"
+                  value={from}
+                  placeholder="Qayerdan"
+                  onChange={(e) => handleInputChange("from", e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Maxsulot turi</div>
+                <input
+                  type="text"
+                  value={productType}
+                  placeholder="Maxsulot turi"
+                  onChange={(e) => handleInputChange("productType", e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Summasi</div>
+                <input
+                  type="number"
+                  value={amount}
+                  placeholder="Summasi"
+                  onChange={(e) => handleInputChange("amount", e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Oxirig berilagan summa</div>
+                <input
+                  type="number"
+                  value={lastGivenAmount}
+                  placeholder="Oxirig berilagan summa"
+                  onChange={(e) => handleInputChange("lastGivenAmount", e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Qolgan summa</div>
+                <input
+                  type="number"
+                  value={remainingAmount}
+                  placeholder="Qolgan summa"
+                  onChange={(e) => handleInputChange("remainingAmount", e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Olingan vaqti</div>
+                <DatePicker
+                  className="vaqt"
+                  placeholderText="Olingan vaqti"
+                  selected={receivedAt}
+                  onChange={(date) => handleDateChange(date)}
+                  locale="uz"
+                />
+              </div>
+              <div>
+                <div>Telefon raqami</div>
+                <PhoneInput
+                  placeholder="Telefon raqami"
+                  value={phoneNumber}
+                  onChange={(phone) => handlePhoneChange(phone)}
+                  defaultCountry="UZ"
+                />
+              </div>
+              <button onClick={handleAdd}>Saqlash ✅</button>
             </div>
           </div>
         )}
+
         <table className="table">
           <thead>
             <tr>
@@ -177,9 +288,9 @@ const Qarzlarim = () => {
               <th data-label="Qayerdan">Qayerdan</th>
               <th data-label="Maxsulot turi">Maxsulot turi</th>
               <th data-label="Summasi">Summasi</th>
+              <th data-label="Oxirig berilagan summa">Oxirig berilagan summa</th>
               <th data-label="Qolgan summa">Qolgan summa</th>
               <th data-label="Olingan vaqti">Olingan vaqti</th>
-              <th data-label="Oxirig berilagan summa">Oxirig berilagan summa</th>
               <th data-label="Telefon raqami">Telefon raqami</th>
               <th data-label="Amallar">Amallar</th>
             </tr>
@@ -200,17 +311,37 @@ const Qarzlarim = () => {
               })
               .map((data) => (
                 <tr key={data.id}>
-                  <td data-label="Ism">{data.name}</td>
-                  <td data-label="Qayerdan">{data.from}</td>
-                  <td data-label="Maxsulot turi">{data.productType}</td>
-                  <td data-label="Summasi">{data.amount}</td>
-                  <td data-label="Qolgan summa">{data.remainingAmount}</td>
-                  <td data-label="Olingan vaqti">{data.receivedAt ? new Date(data.receivedAt).toLocaleDateString() : ""}</td>
-                  <td data-label="Oxirig berilagan summa">{data.lastGivenAmount}</td>
-                  <td data-label="Telefon raqami">{data.phoneNumber}</td>
-                  <td data-label="Amallar">
-                    <button onClick={() => handleEdit(data.id)}>✏️</button>
-                    <button onClick={() => handleDelete(data.id)}>🗑️</button>
+                  <td data-label="Ism">
+                    <div>{data.name}</div>
+                  </td>
+                  <td data-label="Qayerdan">
+                    <div>{data.from}</div>
+                  </td>
+                  <td data-label="Maxsulot turi">
+                    <div>{data.productType}</div>
+                  </td>
+                  <td data-label="Summasi">
+                    <div>{data.amount}</div>
+                  </td>
+                  <td data-label="Oxirig berilagan summa">
+                    <div>{data.lastGivenAmount}</div>
+                  </td>
+                  <td data-label="Qolgan summa">
+                    <div>{data.remainingAmount}</div>
+                  </td>
+                  <td data-label="Olingan vaqti">
+                    <div>
+                      {data.receivedAt
+                        ? new Date(data.receivedAt).toLocaleDateString()
+                        : ""}
+                    </div>
+                  </td>
+                  <td data-label="Telefon raqami">
+                    <div>{data.phoneNumber}</div>
+                  </td>
+                  <td className="ammallar-box" data-label="Amallar">
+                    <button className="ammalar-btn" onClick={() => handleEdit(data.id)}>✏️</button>
+                    <button className="ammalar-btn" onClick={() => handleDelete(data.id)}>🗑️</button>
                   </td>
                 </tr>
               ))}

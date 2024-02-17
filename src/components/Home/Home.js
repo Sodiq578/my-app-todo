@@ -187,12 +187,23 @@ const Home = ({ setArchivedData }) => {
     setShowModal(true);
   };
 
+  const markAsPaid = (id) => {
+    const updatedData = data.map((item) =>
+      item.id === id ? { ...item, paid: true } : item
+    );
+    setData(updatedData);
+    localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
+  };
+
   const handleRemovePhoneNumber = (phoneNumberId) => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
         (phoneNumber) => phoneNumber.id !== phoneNumberId
       );
-      setNewItem((prevItem) => ({ ...prevItem, phoneNumbers: updatedPhoneNumbers }));
+      setNewItem((prevItem) => ({
+        ...prevItem,
+        phoneNumbers: updatedPhoneNumbers,
+      }));
     }
   };
 
@@ -316,9 +327,7 @@ const Home = ({ setArchivedData }) => {
                 <td data-th="Berilish vaqt">
                   {formatDate(new Date(item.userProvidedTime))},{" "}
                   {new Date(item.userProvidedTime).getFullYear()} yil, soat{" "}
-                  {new Date(
-                    item.userProvidedTime
-                  ).toLocaleTimeString("uz-UZ", {
+                  {new Date(item.userProvidedTime).toLocaleTimeString("uz-UZ", {
                     hour: "numeric",
                     minute: "numeric",
                   })}
@@ -369,14 +378,14 @@ const Home = ({ setArchivedData }) => {
                     </div>
                   ))}
                 </td>
-                <td data-th="Amallar">
-                  <button onClick={() => handleEdit(item.id)}>
-                    <i className="fas fa-edit"></i> Tahrirlash
+                
+                <td className="ammallar-box" data-th="Amallar">  <button className="ammalar-btn" onClick={() => handleEdit(item.id)}>
+                    <i className="fas fa-edit"></i> ✏️
                   </button>
-                  <button onClick={() => handleDelete(item.id)}>
-                    <i className="fas fa-trash-alt"></i> To'langan
-                  </button>
-                </td>
+                 
+                  <button className="ammalar-btn" onClick={() => handleDelete(item.id)}>
+                    <i className="fas fa-trash-alt"></i> ✅
+                  </button></td>
               </tr>
             ))}
           </tbody>
@@ -418,7 +427,9 @@ const Home = ({ setArchivedData }) => {
                 className="vaqt"
                 placeholderText="Sana tanlang"
                 selected={newItem.userProvidedTime}
-                onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
+                onChange={(date) =>
+                  setNewItem({ ...newItem, userProvidedTime: date })
+                }
                 locale="ru" // Rus tilida
               />
               <label>Qaytarilish vaqti:</label>
@@ -426,7 +437,9 @@ const Home = ({ setArchivedData }) => {
                 className="vaqt"
                 placeholderText="Sana tanlang"
                 selected={newItem.returnedTime}
-                onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
+                onChange={(date) =>
+                  setNewItem({ ...newItem, returnedTime: date })
+                }
                 locale="ru" // Rus tilida
               />
               <div>
@@ -442,7 +455,10 @@ const Home = ({ setArchivedData }) => {
                             ? { ...num, number: value }
                             : num
                         );
-                        setNewItem({ ...newItem, phoneNumbers: updatedNumbers });
+                        setNewItem({
+                          ...newItem,
+                          phoneNumbers: updatedNumbers,
+                        });
                       }}
                     />
                     {showModal && (
@@ -463,7 +479,12 @@ const Home = ({ setArchivedData }) => {
               ) : (
                 <button onClick={handleAdd}>Saqlash ✅</button>
               )}
-              <button className="bekorqilish" onClick={() => setShowModal(false)}>Bekor qilish</button>
+              <button
+                className="bekorqilish"
+                onClick={() => setShowModal(false)}
+              >
+                Bekor qilish
+              </button>
             </div>
           </div>
         )}

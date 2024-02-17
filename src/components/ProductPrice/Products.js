@@ -8,6 +8,7 @@ const Product = () => {
   const [products, setProducts] = useState(
     JSON.parse(localStorage.getItem('products')) || []
   );
+  const [searchQuery, setSearchQuery] = useState('');
   const [productName, setProductName] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
@@ -51,13 +52,15 @@ const Product = () => {
     };
     setProducts([...products, newProduct]);
     setIsModalOpen(false);
+    clearInputs();
+  };
+  
+  const clearInputs = () => {
     setProductName('');
     setPurchasePrice('');
-    setSellingPrice('');
     setProductDescription('');
     setProductAddress('');
   };
-  
 
   const handleDeleteProduct = (index) => {
     const updatedProducts = [...products];
@@ -71,9 +74,10 @@ const Product = () => {
     setProducts(updatedProducts);
   };
 
-  const handleDollarRateChange = (newRate) => {
-    setDollarRate(newRate);
-    setDollarRatePrompt(false);
+  const handleDollarRateChange = () => {
+    if (window.confirm("Dollar kursini o'zgartirmoqchimisiz?")) {
+      setDollarRatePrompt(true);
+    }
   };
 
   const handleEditButtonClick = (index) => {
@@ -100,37 +104,41 @@ const Product = () => {
     setProducts(updatedProducts);
     setIsModalOpen(false);
     setEditingItemIndex(null);
-    setProductName('');
-    setPurchasePrice('');
-    setSellingPrice('');
-    setProductDescription('');
-    setProductAddress('');
+    clearInputs();
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
     setEditingItemIndex(null);
-    setProductName('');
-    setPurchasePrice('');
-    setSellingPrice('');
-    setProductDescription('');
-    setProductAddress('');
+    clearInputs();
+  };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
     <div>
       <Header className="header" />
       <div className='add__product-box'>
-        <h2 className='dollar-title'>Xozirgi dollar kursi: 1 USD = {dollarRate} UZS</h2>
+      
+          <input
+            type="text"
+            placeholder="Qidiruv..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="search-input"
+          />
+          <h2 className='dollar-title'>Xozirgi dollar kursi: 1 USD = {dollarRate} UZS</h2>
+      
         <div className="searchbtn-box-product">
           <button className='add_product' onClick={() => setIsModalOpen(true)}>Add Product</button>
-        <button onClick={() => setDollarRatePrompt(true)}>Kursni o'zgartirish</button>
+          <button onClick={handleDollarRateChange}>Change Dollar Rate</button>
         </div>
-        
         {dollarRatePrompt && (
           <div>
             <input type="number" value={dollarRate} onChange={(e) => setDollarRate(e.target.value)} />
-            <button onClick={() => handleDollarRateChange(dollarRate)}>Tasdiqlash</button>
+            <button onClick={() => setDollarRatePrompt(false)}>Confirm</button>
           </div>
         )}
       </div>
@@ -139,13 +147,12 @@ const Product = () => {
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
-            <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Maxsulot nomi" />
-            <input type="number" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} placeholder="Olib kelingan narxi dollarlarida" />
-
-            <input type="text" value={productDescription} onChange={(e) => setProductDescription(e.target.value)} placeholder="Masulot xaqida" />
-            <input type="text" value={productAddress} onChange={(e) => setProductAddress(e.target.value)} placeholder="Maxsulot olingan manzil yoki u xaqida maluot" />
+            <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Product Name" />
+            <input type="number" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} placeholder="Purchase Price in USD" />
+            <input type="text" value={productDescription} onChange={(e) => setProductDescription(e.target.value)} placeholder="Product Description" />
+            <input type="text" value={productAddress} onChange={(e) => setProductAddress(e.target.value)} placeholder="Product Address or Additional Info" />
             <button onClick={editingItemIndex !== null ? handleEditConfirm : handleAddProduct}>
-              {editingItemIndex !== null ? 'Tasdiqlash' : 'Add'}
+              {editingItemIndex !== null ? 'Confirm' : 'Add'}
             </button>
             <button onClick={handleCancel}>Cancel</button>
           </div>
@@ -155,14 +162,16 @@ const Product = () => {
       <div className="wrap-table">
         <div className="table personal-styles">
           <div className="table__header">
-            <div className="table__header__cell table__common-cell-1">Maxsulot nomi</div>
-            <div className="table__header__cell table__common-cell-2">Olib kelingan narxi so'mda</div>
-            <div className="table__header__cell table__common-cell-3">Sotish narxi So'mda</div>
-            <div className="table__header__cell table__common-cell-4">Masulot xaqida</div>
-            <div className="table__header__cell table__common-cell-4">Maxsulot olingan manzil yoki u xaqida maluot</div>
-            <div className="table__header__cell table__common-cell-4">Amallar</div>
+            <div className="table__header__cell table__common-cell-1">Product Name</div>
+            <div className="table__header__cell table__common-cell-2">Purchase Price in USD</div>
+            <div className="table__header__cell table__common-cell-3">Selling Price in UZS</div>
+            <div className="table__header__cell table__common-cell-4">Product Description</div>
+            <div className="table__header__cell table__common-cell-4">Product Address or Additional Info</div>
+            <div className="table__header__cell table__common-cell-4">Actions</div>
           </div>
-          {products.map((product, index) => (
+          {products.filter(product =>
+            product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+          ).map((product, index) => (
             <div className="table__row" key={index}>
               <div className="table__cell table__common-cell-1">{product.productName}</div>
               <div className="table__cell table__common-cell-2">{product.purchasePrice} $</div>
@@ -170,8 +179,8 @@ const Product = () => {
               <div className="table__cell table__common-cell-4">{product.productDescription}</div>
               <div className="table__cell table__common-cell-4">{product.productAddress}</div>
               <div className="table__cell table__common-cell-4">
-                <button className="edit-button" onClick={() => handleEditButtonClick(index)}>Edit</button>
-                <button className="delete-button" onClick={() => handleDeleteProduct(index)}>Delete</button>
+                <button className="edit-button" onClick={() => handleEditButtonClick(index)}>✏️</button>
+                <button className="delete-button" onClick={() => handleDeleteProduct(index)}>🗑️</button>
               </div>
             </div>
           ))}

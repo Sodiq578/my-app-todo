@@ -293,7 +293,9 @@ body{
 }
 
 @media screen and (max-width: 500px) {
-
+  .ammallar-box{
+    display: flex !important; 
+  }
   
   tbody tr {
     margin: 20px 0 !important;
@@ -302,6 +304,7 @@ body{
 
 
 @media screen and (min-width: 600px) {
+
   .container h2{
     margin: 0 auto;
     background-color: gren;
@@ -852,3 +855,6 @@ height: 50px;
   text-align: center;
   color: #45a049;
 }
+
+
+

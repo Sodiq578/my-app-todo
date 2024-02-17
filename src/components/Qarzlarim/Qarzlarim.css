@@ -101,3 +101,13 @@
     text-align: left;
   }
 }
+
+
+.ammalar-btn{
+  background: none !important;
+}
+
+.ammallar-box{
+  display: flex;
+  align-items: center;
+}
