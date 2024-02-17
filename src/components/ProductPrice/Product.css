@@ -21,13 +21,7 @@ body {
     background-color: rgba(0,0,0,0.4); 
   }
   
-  .modal-content {
-    
-    margin: 15% auto; 
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-  }
+ 
   
   .close {
     float: right;
@@ -205,19 +199,7 @@ body {
   }
 
 
-  .modal-content {
-    background-color: #fefefe;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    display: flex;
-      flex-direction: column;
-      align-items: center;
-      /* justify-content: center; */
-      /* margin: 0 auto; */
-      margin-left: 0px;
-  }
+
   
 
 
@@ -447,14 +429,7 @@ h3:after {
   padding: 10px 20px !important;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  
-}
+
 
 .close {
   position: absolute;
@@ -656,10 +631,6 @@ button:hover {
 
 
 
-.modal-content button{
-border-radius: 10px;
-background-color: #00d5ff;
-}
 
 .bekorqilish{
   background-color: red !important;
@@ -682,13 +653,7 @@ background-color: #00d5ff;
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+
 
 .close {
   color: #aaa;
@@ -769,13 +734,7 @@ button{
   background-color: rgba(0, 0, 0, 0); /* Set background color to transparent */
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 20% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+
 
 .modal-content input {
   margin-bottom: 10px;
@@ -821,4 +780,75 @@ tr:hover{
 .table__row:hover{
   background-color: #fb4f83 !important;
 
+}
+
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* Adjust the percentage to control vertical positioning */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Adjust the width as needed */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto !important;
+}
+
+
+
+.searchbtn-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.searchbtn-box input , button{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_product {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  height: auto;
+}
+
+.editDollar {
+  width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:50px !important;
+  background-color: red !important;
+  margin: 10px auto; /* Agar so'rovnoma bilan orasida bosig'iz bo'lsa */
+}
+
+.searchbtn-box-product{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchbtn-box-product button{
+/* background-color:  !important; */
+width: 50%;
+height: 50px;
+}
+
+
+.dollar-title{
+  font-weight: bold !important;
+  font-size: 20px;
+  text-align: center;
+  color: #45a049;
 }

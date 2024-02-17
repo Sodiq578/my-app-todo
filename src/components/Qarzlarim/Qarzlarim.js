@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./Qarzlarim.css";
 import Header from "../../layout/Header";
 import DatePicker from "react-datepicker";
-import PhoneInput from "react-phone-number-input/input"; // Telefon raqam inputi
-import "react-phone-number-input/style.css"; // Telefon raqam inputining stili
+import PhoneInput from "react-phone-number-input/input";
 
 const Qarzlarim = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,42 +20,29 @@ const Qarzlarim = () => {
   const [editingItemId, setEditingItemId] = useState(null);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
   
-  // Load tableData from localStorage on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem('tableData');
-    if (savedData) {
-      setTableData(JSON.parse(savedData));
+    try {
+      const savedData = localStorage.getItem('tableData');
+      if (savedData) {
+        setTableData(JSON.parse(savedData));
+      }
+    } catch (error) {
+      console.error('JSON parse xatosi:', error);
     }
   }, []);
 
-  // Save tableData to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('tableData', JSON.stringify(tableData));
-  }, [tableData]);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    clearInputs();
-  };
-
-  const clearInputs = () => {
-    setName('');
-    setFrom('');
-    setProductType('');
-    setAmount(0);
-    setRemainingAmount(0);
-    setReceivedAt(new Date());
-    setLastGivenAmount(0);
-    setPhoneNumber('');
+  const confirmDelete = () => {
+    if (itemToDeleteId !== null) {
+      const updatedData = tableData.filter((item) => item.id !== itemToDeleteId);
+      setTableData(updatedData);
+      setShowDeleteConfirmation(false);
+      setItemToDeleteId(null);
+      localStorage.setItem("tableData", JSON.stringify(updatedData));
+    }
   };
 
   const handleAdd = () => {
     if (editingItemId !== null) {
-      // If editingItemId is not null, it means we are updating an existing item
       const updatedData = tableData.map(item => {
         if (item.id === editingItemId) {
           return { ...item, name, from, productType, amount, remainingAmount, receivedAt, lastGivenAmount, phoneNumber };
@@ -67,7 +52,6 @@ const Qarzlarim = () => {
       setTableData(updatedData);
       setEditingItemId(null);
     } else {
-      // Otherwise, we are adding a new item
       const newData = { id: Date.now(), name, from, productType, amount, remainingAmount, receivedAt, lastGivenAmount, phoneNumber };
       setTableData([...tableData, newData]);
     }
@@ -98,18 +82,24 @@ const Qarzlarim = () => {
     }
   }, [tableData]);
 
-  const addPhoneNumberRow = () => {
-    const newId =
-      tableData.length > 0
-        ? Math.max(...tableData.map(item => item.id)) + 1
-        : 1;
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-    const newTableData = tableData.map(item => ({
-      ...item,
-      phoneNumbers: [...item.phoneNumbers, { id: newId, number: "" }]
-    }));
+  const closeModal = () => {
+    setIsModalOpen(false);
+    clearInputs();
+  };
 
-    setTableData(newTableData);
+  const clearInputs = () => {
+    setName('');
+    setFrom('');
+    setProductType('');
+    setAmount(0);
+    setRemainingAmount(0);
+    setReceivedAt(new Date());
+    setLastGivenAmount(0);
+    setPhoneNumber('');
   };
 
   const calculateTotalSum = () => {
@@ -148,13 +138,11 @@ const Qarzlarim = () => {
     <div>
       <Header />
       <div className="container">
-        {/* Izlash inputi */}
-        <input type="text" placeholder="Izlash..." onChange={handleSearch} />
-
-        {/* Qo'shish tugmasi */}
-        <button onClick={openModal}>Qo'shish</button>
-
-        {/* Modal */}
+        <div className="searchbtn-box">
+          <input type="text" placeholder="Izlash..." onChange={handleSearch} />
+          <button onClick={openModal}>Qo'shish</button>
+        </div>
+   
         {isModalOpen && (
           <div className="modal">
             <div className="modal-content">
@@ -169,60 +157,74 @@ const Qarzlarim = () => {
                 placeholderText="Olingan vaqti"
                 selected={receivedAt}
                 onChange={(date) => setReceivedAt(date)}
-                locale="uz" // O'zbek tilida
+                locale="uz" 
               />
               <input type="number" value={lastGivenAmount} placeholder="Oxirig berilagan summa" onChange={(e) => setLastGivenAmount(parseInt(e.target.value))} />
               <PhoneInput
                 placeholder="Telefon raqami"
                 value={phoneNumber}
                 onChange={(phone) => setPhoneNumber(phone)}
-                defaultCountry="UZ" // O'zbekiston
+                defaultCountry="UZ" 
               />
               <button onClick={handleAdd}>Saqlash</button>
             </div>
           </div>
         )}
-
-        {/* Jadval */}
         <table className="table">
           <thead>
             <tr>
-              <th>Kimdan</th>
-              <th>Qayerdan</th>
-              <th>Maxsulot turi</th>
-              <th>Summasi</th>
-              <th>Qolgan summa</th>
-              <th>Olingan vaqti</th>
-              <th>Oxirig berilagan summa</th>
-              <th>Telefon raqami</th>
-              <th>Amallar</th>
+              <th data-label="Ism">Ism</th>
+              <th data-label="Qayerdan">Qayerdan</th>
+              <th data-label="Maxsulot turi">Maxsulot turi</th>
+              <th data-label="Summasi">Summasi</th>
+              <th data-label="Qolgan summa">Qolgan summa</th>
+              <th data-label="Olingan vaqti">Olingan vaqti</th>
+              <th data-label="Oxirig berilagan summa">Oxirig berilagan summa</th>
+              <th data-label="Telefon raqami">Telefon raqami</th>
+              <th data-label="Amallar">Amallar</th>
             </tr>
           </thead>
           <tbody>
-            {tableData.filter((data) => {
-              if (searchTerm === '') {
-                return data;
-              } else if (data.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                return data;
-              }
-            }).map((rowData, index) => (
-              <tr key={index}>
-                <td>{rowData.name}</td>
-                <td>{rowData.from}</td>
-                <td>{rowData.productType}</td>
-                <td>{rowData.amount}</td>
-                <td>{rowData.remainingAmount}</td>
-                <td>{new Date(rowData.receivedAt).toDateString()}</td> {/* receivedAt ni qayta o'zgaruvchan Date sifatida o'rnatish */}
-                <td>{rowData.lastGivenAmount}</td>
-                <td>{rowData.phoneNumber}</td>
-                <td>
-                  <button onClick={() => handleEdit(rowData.id)}>Tahrirlash</button>
-                  <button onClick={() => handleDelete(rowData.id)}>O'chirish</button>
-                </td>
-              </tr>
-            ))}
+            {tableData
+              .filter((val) => {
+                if (searchTerm === "") {
+                  return val;
+                } else if (
+                  val.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  val.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  val.productType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  val.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .map((data) => (
+                <tr key={data.id}>
+                  <td data-label="Ism">{data.name}</td>
+                  <td data-label="Qayerdan">{data.from}</td>
+                  <td data-label="Maxsulot turi">{data.productType}</td>
+                  <td data-label="Summasi">{data.amount}</td>
+                  <td data-label="Qolgan summa">{data.remainingAmount}</td>
+                  <td data-label="Olingan vaqti">{data.receivedAt ? new Date(data.receivedAt).toLocaleDateString() : ""}</td>
+                  <td data-label="Oxirig berilagan summa">{data.lastGivenAmount}</td>
+                  <td data-label="Telefon raqami">{data.phoneNumber}</td>
+                  <td data-label="Amallar">
+                    <button onClick={() => handleEdit(data.id)}>✏️</button>
+                    <button onClick={() => handleDelete(data.id)}>🗑️</button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
+        {showDeleteConfirmation && (
+          <div className="delete-confirmation">
+            <p>Rostdan ham bu ma'lumotni o'chirmoqchimisiz?</p>
+            <div>
+              <button onClick={confirmDelete}>Ha</button>
+              <button onClick={() => setShowDeleteConfirmation(false)}>Yo'q</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -121,9 +121,12 @@ const Product = () => {
     <div>
       <Header className="header" />
       <div className='add__product-box'>
-        <h2>Xozirgi dollar kursi: 1 USD = {dollarRate} UZS</h2>
-        <button className='add_product' onClick={() => setIsModalOpen(true)}>Add Product</button>
-        <button onClick={() => setDollarRatePrompt(true)}>Dollar kursini o'zgartirish</button>
+        <h2 className='dollar-title'>Xozirgi dollar kursi: 1 USD = {dollarRate} UZS</h2>
+        <div className="searchbtn-box-product">
+          <button className='add_product' onClick={() => setIsModalOpen(true)}>Add Product</button>
+        <button onClick={() => setDollarRatePrompt(true)}>Kursni o'zgartirish</button>
+        </div>
+        
         {dollarRatePrompt && (
           <div>
             <input type="number" value={dollarRate} onChange={(e) => setDollarRate(e.target.value)} />
