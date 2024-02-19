@@ -32,10 +32,6 @@ const Qarzlarim = () => {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("tableData", JSON.stringify(tableData));
-  }, [tableData]);
-
   const confirmDelete = () => {
     if (itemToDeleteId !== null) {
       const updatedData = tableData.filter(
@@ -44,6 +40,7 @@ const Qarzlarim = () => {
       setTableData(updatedData);
       setShowDeleteConfirmation(false);
       setItemToDeleteId(null);
+      localStorage.setItem("tableData", JSON.stringify(updatedData));
     }
   };
 
@@ -128,43 +125,15 @@ const Qarzlarim = () => {
     setPhoneNumber("");
   };
 
-  const handleInputChange = (field, value) => {
-    switch (field) {
-      case "name":
-        setName(value);
-        break;
-      case "from":
-        setFrom(value);
-        break;
-      case "productType":
-        setProductType(value);
-        break;
-      case "amount":
-        setAmount(parseInt(value));
-        break;
-      case "lastGivenAmount":
-        setLastGivenAmount(parseInt(value));
-        break;
-      case "remainingAmount":
-        setRemainingAmount(parseInt(value));
-        break;
-      case "receivedAt":
-        setReceivedAt(value);
-        break;
-      case "phoneNumber":
-        setPhoneNumber(value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleDateChange = (date) => {
-    setReceivedAt(date);
-  };
-
-  const handlePhoneChange = (phone) => {
-    setPhoneNumber(phone);
+  const calculateTotalSum = () => {
+    let totalSum = 0;
+    tableData.forEach((item) => {
+      totalSum += parseFloat(item.summa);
+    });
+    return totalSum.toLocaleString("uz-UZ", {
+      style: "currency",
+      currency: "UZS",
+    });
   };
 
   const handleDelete = (id) => {
@@ -203,79 +172,55 @@ const Qarzlarim = () => {
               <span className="close" onClick={closeModal}>
                 &times;
               </span>
-              <div>
-                <div>Ism</div>
-                <input
-                  type="text"
-                  value={name}
-                  placeholder="Ism"
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                />
-              </div>
-              <div>
-                <div>Qayerdan</div>
-                <input
-                  type="text"
-                  value={from}
-                  placeholder="Qayerdan"
-                  onChange={(e) => handleInputChange("from", e.target.value)}
-                />
-              </div>
-              <div>
-                <div>Maxsulot turi</div>
-                <input
-                  type="text"
-                  value={productType}
-                  placeholder="Maxsulot turi"
-                  onChange={(e) => handleInputChange("productType", e.target.value)}
-                />
-              </div>
-              <div>
-                <div>Summasi</div>
-                <input
-                  type="number"
-                  value={amount}
-                  placeholder="Summasi"
-                  onChange={(e) => handleInputChange("amount", e.target.value)}
-                />
-              </div>
-              <div>
-                <div>Oxirig berilagan summa</div>
-                <input
-                  type="number"
-                  value={lastGivenAmount}
-                  placeholder="Oxirig berilagan summa"
-                  onChange={(e) => handleInputChange("lastGivenAmount", e.target.value)}
-                />
-              </div>
-              <div>
-                <div>Qolgan summa</div>
-                <input
-                  type="number"
-                  value={remainingAmount}
-                  placeholder="Qolgan summa"
-                  onChange={(e) => handleInputChange("remainingAmount", e.target.value)}
-                />
-              </div>
-              <div>
-                <div>Olingan vaqti</div>
-                <DatePicker
-                  className="vaqt"
-                  placeholderText="Olingan vaqti"
-                  selected={receivedAt}
-                  onChange={(date) => handleDateChange(date)}
-                  locale="uz"
-                />
-              </div>
-              <div>
-                <div>Telefon raqami</div>
-                <PhoneInput
-                  placeholder="Telefon raqami"
-                  value={phoneNumber}
-                  onChange={(phone) => handlePhoneChange(phone)}
-                  defaultCountry="UZ"
-                />
-              </div>
+              <input
+                type="text"
+                value={name}
+                placeholder="Ism"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="text"
+                value={from}
+                placeholder="Qayerdan"
+                onChange={(e) => setFrom(e.target.value)}
+              />
+              <input
+                type="text"
+                value={productType}
+                placeholder="Maxsulot turi"
+                onChange={(e) => setProductType(e.target.value)}
+              />
+              <input
+                type="number"
+                value={amount}
+                placeholder="Summasi"
+                onChange={(e) => setAmount(parseInt(e.target.value))}
+              />
+              <input
+                type="number"
+                value={lastGivenAmount}
+                placeholder="Oxirig berilagan summa"
+                onChange={(e) => setLastGivenAmount(parseInt(e.target.value))}
+              />
+              <input
+                type="number"
+                value={remainingAmount}
+                placeholder="Qolgan summa"
+                onChange={(e) => setRemainingAmount(parseInt(e.target.value))}
+              />
+              <DatePicker
+                className="vaqt"
+                placeholderText="Olingan vaqti"
+                selected={receivedAt}
+                onChange={(date) => setReceivedAt(date)}
+                locale="uz"
+              />
+              <PhoneInput
+                placeholder="Telefon raqami"
+                value={phoneNumber}
+                onChange={(phone) => setPhoneNumber(phone)}
+                defaultCountry="UZ"
+              />
               <button onClick={handleAdd}>Saqlash ✅</button>
             </div>
           </div>
@@ -288,7 +233,9 @@ const Qarzlarim = () => {
               <th data-label="Qayerdan">Qayerdan</th>
               <th data-label="Maxsulot turi">Maxsulot turi</th>
               <th data-label="Summasi">Summasi</th>
-              <th data-label="Oxirig berilagan summa">Oxirig berilagan summa</th>
+              <th data-label="Oxirig berilagan summa">
+                Oxirig berilagan summa
+              </th>
               <th data-label="Qolgan summa">Qolgan summa</th>
               <th data-label="Olingan vaqti">Olingan vaqti</th>
               <th data-label="Telefon raqami">Telefon raqami</th>
@@ -303,8 +250,12 @@ const Qarzlarim = () => {
                 } else if (
                   val.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   val.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  val.productType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  val.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
+                  val.productType
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                  val.phoneNumber
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
                 ) {
                   return val;
                 }
@@ -312,36 +263,89 @@ const Qarzlarim = () => {
               .map((data) => (
                 <tr key={data.id}>
                   <td data-label="Ism">
-                    <div>{data.name}</div>
+                    <input
+                      type="text"
+                      value={data.name}
+                      onChange={(e) =>
+                        handleInputChange(data.id, "name", e.target.value)
+                      }
+                    />
                   </td>
                   <td data-label="Qayerdan">
-                    <div>{data.from}</div>
+                    <input
+                      type="text"
+                      value={data.from}
+                      onChange={(e) =>
+                        handleInputChange(data.id, "from", e.target.value)
+                      }
+                    />
                   </td>
                   <td data-label="Maxsulot turi">
-                    <div>{data.productType}</div>
+                    <input
+                      type="text"
+                      value={data.productType}
+                      onChange={(e) =>
+                        handleInputChange(data.id, "productType", e.target.value)
+                      }
+                    />
                   </td>
                   <td data-label="Summasi">
-                    <div>{data.amount}</div>
+                    <input
+                      type="number"
+                      value={data.amount}
+                      onChange={(e) =>
+                        handleInputChange(data.id, "amount", parseInt(e.target.value))
+                      }
+                    />
                   </td>
                   <td data-label="Oxirig berilagan summa">
-                    <div>{data.lastGivenAmount}</div>
+                    <input
+                      type="number"
+                      value={data.lastGivenAmount}
+                      onChange={(e) =>
+                        handleInputChange(data.id, "lastGivenAmount", parseInt(e.target.value))
+                      }
+                    />
                   </td>
                   <td data-label="Qolgan summa">
-                    <div>{data.remainingAmount}</div>
+                    <input
+                      type="number"
+                      value={data.remainingAmount}
+                      onChange={(e) =>
+                        handleInputChange(data.id, "remainingAmount", parseInt(e.target.value))
+                      }
+                    />
                   </td>
                   <td data-label="Olingan vaqti">
-                    <div>
-                      {data.receivedAt
-                        ? new Date(data.receivedAt).toLocaleDateString()
-                        : ""}
-                    </div>
+                    <DatePicker
+                      className="vaqt"
+                      placeholderText="Olingan vaqti"
+                      selected={new Date(data.receivedAt)}
+                      onChange={(date) => handleDateChange(data.id, date)}
+                      locale="uz"
+                    />
                   </td>
                   <td data-label="Telefon raqami">
-                    <div>{data.phoneNumber}</div>
+                    <PhoneInput
+                      placeholder="Telefon raqami"
+                      value={data.phoneNumber}
+                      onChange={(phone) => handlePhoneChange(data.id, phone)}
+                      defaultCountry="UZ"
+                    />
                   </td>
                   <td className="ammallar-box" data-label="Amallar">
-                    <button className="ammalar-btn" onClick={() => handleEdit(data.id)}>✏️</button>
-                    <button className="ammalar-btn" onClick={() => handleDelete(data.id)}>🗑️</button>
+                    <button
+                      className="ammalar-btn"
+                      onClick={() => handleEdit(data.id)}
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      className="ammalar-btn"
+                      onClick={() => handleDelete(data.id)}
+                    >
+                      🗑️
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -352,7 +356,9 @@ const Qarzlarim = () => {
             <p>Rostdan ham bu ma'lumotni o'chirmoqchimisiz?</p>
             <div>
               <button onClick={confirmDelete}>Ha</button>
-              <button onClick={() => setShowDeleteConfirmation(false)}>Yo'q</button>
+              <button onClick={() => setShowDeleteConfirmation(false)}>
+                Yo'q
+              </button>
             </div>
           </div>
         )}

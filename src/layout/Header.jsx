@@ -12,7 +12,6 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Modal menyuni yopish uchun funksiya
   const closeMenu = () => {
     setMenuOpen(false);
   };
@@ -20,9 +19,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="header-logo">
-          SDK
-        </Link>
+      
         <div className="menu-icon" onClick={toggleMenu}>
           <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
         </div>
@@ -37,9 +34,8 @@ const Header = () => {
               Mahsulotlar
             </Link>
           </li>
-
           <li className="header-item">
-            <Link to="/qarzlarim" className="header-links" onClick={closeMenu}> {/* Yo'l uchun "qarzlarim" ni ishlatamiz */}
+            <Link to="/qarzlarim" className="header-links" onClick={closeMenu}>
               Qarzlarim
             </Link>
           </li>

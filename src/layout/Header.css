@@ -1,50 +1,57 @@
+/* Header.css */
 .header {
-    background-color: #9395D3;
-    height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 24px;
-    width: 100%;
-  }
-  
+/* background-color: blanchedalmond; */
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+margin: 10px 0;
+  width: 100%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+ 
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.header-logo {
+  color: #fff;
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.header-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.header-item {
+  margin-left: 24px;
+}
+
+.header-links {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.menu-icon {
+  display: none;
+}
+
+/* Mobil qurilmalar uchun media query */
+@media screen and (max-width: 960px) {
   .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1100px;
-  }
-  
-  .header-logo {
-    color: #fff;
-    font-size: 1.5rem;
-    text-decoration: none;
-  }
-  
-  .header-menu {
-    display: flex;
-    align-items: center;
-    list-style: none;
-  }
-  
-  .header-item {
-    margin-right: 24px;
-  }
-  
-  .header-links {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.2rem;
-  }
-  
-  /* Mobil qurilmalar uchun media qo'yma */
-  @media screen and (max-width: 960px) {
-    .header-container {
       padding: 0 16px;
-    }
-  
-    .header-menu {
+  }
+
+  .header-menu {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -55,110 +62,31 @@
       opacity: 1;
       transition: all 0.5s ease;
       background-color: #333;
-    }
-  
-    .header-menu.active {
+  }
+
+  .header-menu.active {
       background-color: #333;
       left: 0;
       opacity: 1;
       transition: all 0.5s ease;
       z-index: 1;
       margin-top: 8px;
-    }
-  
-    .header-item {
+  }
+
+  .header-item {
       margin-right: 0;
       margin-bottom: 10px;
-    }
-  
-    .header-links {
+  }
+
+  .header-links {
       text-align: center;
       padding: 16px;
       width: 100%;
       display: table;
-    }
-  
-    .menu-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.5rem;
-      cursor: pointer;
-      z-index: 100;
-    }
   }
-  .menu-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 100;
-  }
-  
-  /* Mobil qurilmalar uchun media qo'yma */
-  @media screen and (max-width: 960px) {
-    .menu-icon {
-      position: absolute;
-      top: 0;
-      right: 24px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.5rem;
-      cursor: pointer;
-      z-index: 100;
-    }
-  }
-  /* Header.css */
-.menu-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 100;
-  }
-  
-  /* Mobil qurilmalar uchun media qo'yma */
-  @media screen and (max-width: 960px) {
-    .menu-icon {
-      position: absolute;
-      top: 0;
-      right: 24px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.5rem;
-      cursor: pointer;
-      z-index: 100;
-      display: inline;
-      top: 0px;
-      margin-top: 30px !important;
-    }
-  }
-  
 
   .menu-icon {
-    display: none;
-    
-     /* Izlashdan oldin, bu uslubni yashirmoq */
-  }
-  .menu-icon {
-    display: none; /* Izlashdan oldin, bu uslubni yashirmoq */
-  }
-  
-  /* Mobil qurilmalar uchun media qo'yma */
-  @media screen and (max-width: 990px) {
-    .menu-icon {
-      display: block; /* Mobilda menyu ikonini ko'rsatish */
+      display: block;
       position: absolute;
       top: 0;
       right: 24px;
@@ -169,10 +97,36 @@
       font-size: 1.5rem;
       cursor: pointer;
       z-index: 100;
-    }
-    .header{
-        width: 100%;
-    }
   }
-  
+}
 
+.header-links{
+  color: grey;
+}
+
+.header-item{
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Header.css */
+
+
+.header-item:hover {
+  background-color: #ccd6f2;
+}
+
+.header-item:hover .header-links {
+ color: #3B6CF8;
+}
+
+
+.header-top{
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+height: 70px;
+display: flex;
+align-items: center;
+justify-content: center;
+
+}

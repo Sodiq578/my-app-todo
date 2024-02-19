@@ -177,6 +177,17 @@ body {
       display: var(--table-base-display);
       font-family: var(--table-additional-font-family);
     }
+
+    .wery-bir-box{
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category p {
+   
+      margin: 5px 0 !important;
+    }
+    
   }
   
 
@@ -342,7 +353,7 @@ body{
     justify-content: center;
     margin: 0 auto !important;
     padding-right: 0px !important;
-    text-align: center;
+    text-align: and;
   }
   .modal-content {
     background-color: #fefefe;
@@ -377,6 +388,12 @@ h1 {
 .container {
   display: block;
   text-align: center;
+
+}
+.container{
+  width: 1400px;
+  margin: 0 auto;
+  /* padding: 0 15px; */
 }
 
 h3 {
@@ -458,6 +475,10 @@ h3:after {
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add__button:hover {
@@ -533,10 +554,7 @@ button:hover {
 }
 
 .add__button{
-  width: 30%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
 }
 
 
@@ -858,3 +876,118 @@ height: 50px;
 
 
 
+.wery-bir-box{
+  display: flex;
+}
+
+
+.category {
+  background-color: #0E1628; /* Set green background */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px; /* Add some bottom margin */
+  height: 100%;
+}
+
+.category p {
+  cursor: pointer;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  color: white;
+  margin: 15% 0;
+}
+
+.category p:hover {
+  color: black; /* Change text color to black on hover */
+}
+
+
+.category p:hover{
+background-color: white;
+  
+}
+
+/* Media query for responsiveness */
+@media screen and (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+ /* kategoraylar degan button bo'lsin button bosilganda modal chiqsin ko'rinsin modalni ichida manzilalr bo'lsin qorliq jobu iopq oqratepa markaz  qaysi manzil bosilsa shu malumto bilan kiritilsgan malumotlar korinisn bosigladan keyin malumot searchga yuborilsin searchdan izlansin qidirilsin va shu malumotlar ko'rinsin */
+
+
+ /* ikkinchi malumot bosilsa birinchi malutmo searchdan o'chirslin boshqa malumot bosilsa unda oldingi malumot o'chiroslin */
+ 
+
+
+
+
+ .search-input {
+  /* Add your styles for the search input */
+}
+
+.nav-wrapper {
+  /* Add your styles for the navigation wrapper */
+}
+
+.sl-nav {
+  /* Add your styles for the language selector navigation */
+}
+
+.sl-nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sl-nav ul li {
+  display: inline-block;
+  position: relative;
+}
+
+.sl-nav ul li ul {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 120px;
+  z-index: 1;
+}
+
+.sl-nav ul li:hover ul {
+  display: block;
+}
+
+.sl-nav ul li ul li {
+  display: block;
+}
+
+.sl-nav ul li ul li:hover {
+  background-color: #f0f0f0;
+}
+
+.sl-flag {
+  display: inline-block;
+  width: 20px; /* Adjust as needed */
+  height: 20px; /* Adjust as needed */
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+
+.search-input{
+  height: 50px !important;
+  width: 40% !important;
+  border: 1 px solid rgb(99, 99, 98);
+  /* border: none; */
+  padding: 20px;
+}
+
+.content-box{
+  display: flex;
+  flex-direction: column;
+}
