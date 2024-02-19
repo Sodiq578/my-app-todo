@@ -1,5 +1,5 @@
 .header {
-    background-color: #9395D3;
+    /* background-color: #9395D3; */
     height: 80px;
     display: flex;
     justify-content: space-between;
@@ -64,7 +64,7 @@
       transition: all 0.5s ease;
       z-index: 1;
       margin-top: 8px;
-      top: 120px;
+      top: 50px;
     }
   
     .header-item {
@@ -88,6 +88,9 @@
       cursor: pointer;
       z-index: 100;
     }
+
+
+    
   }
   .menu-icon {
     display: flex;
@@ -161,8 +164,7 @@
     .menu-icon {
       display: block; /* Mobilda menyu ikonini ko'rsatish */
       position: absolute;
-      top: 44px;
-
+      top: -18px;
       right: 24px;
       height: 100%;
       align-items: center;
@@ -174,7 +176,32 @@
     }
     .header{
         width: 100%;
+        height: 10px;
+        padding-top: 50px;
     }
+    
   }
   
 
+.menu-icon{
+ color: black;
+ height: 30px;
+}
+
+.header-links{
+  color: black;
+}
+
+.category{
+  margin-top: 57px;
+}
+
+/* Orqa fonni ko'k qilish */
+.header-item:hover {
+  background-color: blue;
+}
+
+/* Header-linklar o'ng tomonini qizil qilish */
+.header-item:hover .header-links {
+  color: red;
+}

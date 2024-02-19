@@ -49,6 +49,14 @@ body {
     margin-top: 50px !important;
   }
   
+  .search-input {
+    width: 30% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    padding: auto;
+  }
 
   .personal-styles {
     --table-display: table;
@@ -139,8 +147,13 @@ body {
   .table__common-cell-4 {
     width: var(--table-common-cell-3-width);
   }
-  
+ 
+
   @media (max-width: 768px) {
+
+    .category{
+      margin-top:-30px;
+    }
     .personal-styles {
       --table-display: block;
       --table-cell-border-bottom: none;
@@ -188,6 +201,19 @@ body {
       margin: 5px 0 !important;
     }
     
+
+    .header-top{
+      width: 100% !important;
+      
+    }
+
+
+    .search-language-container{
+      width: 100% !important ;
+    }
+    .search-input{
+      width: 70% !important;
+    }
   }
   
 
@@ -225,6 +251,7 @@ body{
   background-size: cover; /* Rasmni to'liq qamrab olmasligi uchun */
   background-position: center; /* Rasmning o'rtasiga joylashish */
   /* background-image: url('../../images/pul24.jpg') !important;  */
+  
  
 }
 /* Table */
@@ -236,9 +263,10 @@ body{
 }
 
 .rwd-table tr:first-child {
-  border-top: none;
-  background: #42caca !important;
-  color: #fff;
+  border-color: #DBE0EA;
+  background: #DBE0EA !important;
+  color: black;
+
 }
 
 .rwd-table tr {
@@ -393,7 +421,7 @@ h1 {
 .container{
   /* width: 1400px; */
   margin: 0 auto;
-  /* padding: 0 15px; */
+  padding: 0 10px;
 }
 
 h3 {
@@ -544,14 +572,7 @@ button:hover {
   background-color: #45a049;
 }
 
-.search-input {
-  width: 30% !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: auto;
-  padding: auto;
-}
+
 
 .add__button{
 
@@ -795,11 +816,11 @@ button{
 }
 
 tr:hover{
-  background-color: #fb4f83 !important;
+  background-color: #eeecec !important;
 }
 
 .table__row:hover{
-  background-color: #fb4f83 !important;
+  background-color: #eeecec  !important;
 
 }
 
@@ -927,9 +948,7 @@ background-color: white;
 
 
 
- .search-input {
-  /* Add your styles for the search input */
-}
+
 
 .nav-wrapper {
   /* Add your styles for the navigation wrapper */
@@ -981,8 +1000,30 @@ background-color: white;
 
 .search-input{
   height: 50px !important;
-  width: 40% !important;
+ 
   border: 1 px solid rgb(99, 99, 98);
   /* border: none; */
   padding: 20px;
 }
+
+.search-language-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+
+.table-big-box{
+  width: 90% !important;
+}
+
+
+/* table th,
+table td {
+  border: 1px solid #dddddd !important; 
+  padding: 8px;
+  text-align: left;
+} */
+
+

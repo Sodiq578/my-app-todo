@@ -11,7 +11,8 @@ const Home = ({ setArchivedData }) => {
   const [data, setData] = useState([]); // Barcha ma'lumotlar
   const [showModal, setShowModal] = useState(false); // Modal oynani ko'rsatish/yo'q qilish
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // O'chirishni tasdiqlash oynani ko'rsatish/yo'q qilish
-  const [newItem, setNewItem] = useState({ // Yangi ma'lumot qo'shish uchun
+  const [newItem, setNewItem] = useState({
+    // Yangi ma'lumot qo'shish uchun
     name: "",
     summa: "",
     userProvidedTime: new Date(),
@@ -24,6 +25,8 @@ const Home = ({ setArchivedData }) => {
   const [searchQuery, setSearchQuery] = useState(""); // Qidiruv so'rovi
   const [visibleData, setVisibleData] = useState([]); // Ko'rsatilayotgan ma'lumotlar
   const [selectedCategory, setSelectedCategory] = useState(""); // Tanlangan kategoriya
+const [selectedLanguage, setSelectedLanguage] = useState("uz"); // Default language is "O'zbekcha"
+const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default profile is "Profil 1"
 
   // O'zbek tilidagi hafta kuni va oy nomlari
   const daysInUzbek = [
@@ -280,17 +283,19 @@ const Home = ({ setArchivedData }) => {
 
   return (
     <div className="container">
-                  <div className="container header-top">
-                  <input
-                type="search"
-                placeholder="Qidiruv..."
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="search-input"
-              />
+   <div className="container header-top">
+  <div className="search-language-container">
+    <input
+      type="search"
+      placeholder="Qidiruv..."
+      value={searchQuery}
+      onChange={(e) => handleSearch(e.target.value)}
+      className="search-input"
+    />
+   
+  </div>
+</div>
 
-        
-                  </div>
       <Header />
 
       <div className="container">
@@ -308,15 +313,14 @@ const Home = ({ setArchivedData }) => {
             <p onClick={() => handleCategorySelect("")}>Barchasi</p>
           </div>
 
-          <div>
-            
+          <div className="table-big-box">
             <div className="search__box">
-<h2 className="total-sum">
-              Jami Summa:{" "}
-              {calculateTotalSum().toLocaleString("uz-UZ", {
-                currency: "UZS",
-              })}
-            </h2>
+              <h2 className="total-sum">
+                Jami Summa:{" "}
+                {calculateTotalSum().toLocaleString("uz-UZ", {
+                  currency: "UZS",
+                })}
+              </h2>
               <button
                 className="add__button"
                 onClick={() => setShowModal(true)}
@@ -327,7 +331,7 @@ const Home = ({ setArchivedData }) => {
             <table className="rwd-table">
               <tbody>
                 <tr>
-                  <th>ID</th>
+                  <th>N/O</th>
                   <th>Ism</th>
                   <th>Summa</th>
                   <th>Manzil</th>
@@ -534,7 +538,9 @@ const Home = ({ setArchivedData }) => {
                   ) : (
                     <button onClick={handleAdd}>Saqlash ✅</button>
                   )}
-                  <button onClick={() => setShowModal(false)}>Bekor qilish</button>
+                  <button onClick={() => setShowModal(false)}>
+                    Bekor qilish
+                  </button>
                 </div>
               </div>
             )}
