@@ -353,7 +353,7 @@ body{
     justify-content: center;
     margin: 0 auto !important;
     padding-right: 0px !important;
-    text-align: and;
+    text-align: center;
   }
   .modal-content {
     background-color: #fefefe;
@@ -391,7 +391,7 @@ h1 {
 
 }
 .container{
-  width: 1400px;
+  /* width: 1400px; */
   margin: 0 auto;
   /* padding: 0 15px; */
 }
@@ -985,9 +985,4 @@ background-color: white;
   border: 1 px solid rgb(99, 99, 98);
   /* border: none; */
   padding: 20px;
-}
-
-.content-box{
-  display: flex;
-  flex-direction: column;
 }
