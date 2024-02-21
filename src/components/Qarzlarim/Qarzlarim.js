@@ -3,7 +3,7 @@ import "./Qarzlarim.css";
 import Header from "../../layout/Header";
 import DatePicker from "react-datepicker";
 import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css"; // Stilni import qilish
+import "react-phone-number-input/style.css"; 
 
 const Qarzlarim = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -155,6 +155,36 @@ const Qarzlarim = () => {
     setPhoneNumber(itemToEdit.phoneNumber);
     setEditingItemId(id);
     openModal();
+  };
+
+  const handleInputChange = (id, field, value) => {
+    const updatedData = tableData.map((item) => {
+      if (item.id === id) {
+        return { ...item, [field]: value };
+      }
+      return item;
+    });
+    setTableData(updatedData);
+  };
+
+  const handleDateChange = (id, date) => {
+    const updatedData = tableData.map((item) => {
+      if (item.id === id) {
+        return { ...item, receivedAt: date };
+      }
+      return item;
+    });
+    setTableData(updatedData);
+  };
+
+  const handlePhoneChange = (id, phone) => {
+    const updatedData = tableData.map((item) => {
+      if (item.id === id) {
+        return { ...item, phoneNumber: phone };
+      }
+      return item;
+    });
+    setTableData(updatedData);
   };
 
   return (
