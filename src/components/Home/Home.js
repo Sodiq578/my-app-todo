@@ -7,12 +7,12 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import Header from "../../layout/Header";
 
-const Home = ({ setArchivedData }) => {
+const Home = () => {
+  // Komponent holati uchun muhim holatlar
   const [data, setData] = useState([]); // Barcha ma'lumotlar
   const [showModal, setShowModal] = useState(false); // Modal oynani ko'rsatish/yo'q qilish
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // O'chirishni tasdiqlash oynani ko'rsatish/yo'q qilish
-  const [newItem, setNewItem] = useState({
-    // Yangi ma'lumot qo'shish uchun
+  const [newItem, setNewItem] = useState({ // Yangi ma'lumot qo'shish uchun
     name: "",
     summa: "",
     userProvidedTime: new Date(),
@@ -25,8 +25,18 @@ const Home = ({ setArchivedData }) => {
   const [searchQuery, setSearchQuery] = useState(""); // Qidiruv so'rovi
   const [visibleData, setVisibleData] = useState([]); // Ko'rsatilayotgan ma'lumotlar
   const [selectedCategory, setSelectedCategory] = useState(""); // Tanlangan kategoriya
-const [selectedLanguage, setSelectedLanguage] = useState("uz"); // Default language is "O'zbekcha"
-const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default profile is "Profil 1"
+  const [selectedLanguage, setSelectedLanguage] = useState("uz"); // Default language is "O'zbekcha"
+  const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default profile is "Profil 1"
+  const [categories, setCategories] = useState([
+    "jobu",
+    "markaz",
+    "qorliq",
+    "marmin",
+    "savxoz",
+    "mo'minqul",
+    "chep",
+    "ipoq",
+  ]);
 
   // O'zbek tilidagi hafta kuni va oy nomlari
   const daysInUzbek = [
@@ -75,16 +85,22 @@ const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default p
       const returnedTime = new Date(item.returnedTime);
       return returnedTime < now;
     });
-  
+
     if (itemsWithDueDate.length > 0) {
       alert(
         `Qaytarilish vaqti o'tgan buyurtmalar mavjud: \n\n${itemsWithDueDate
-          .map((item) => `Ism: ${item.name}, Manzil: ${item.manzil}, Telefon raqam: ${item.phoneNumbers.map(phone => phone.number).join(", ")}`)
+          .map(
+            (item) =>
+              `Ism: ${item.name}, Manzil: ${
+                item.manzil
+              }, Telefon raqam: ${item.phoneNumbers
+                .map((phone) => phone.number)
+                .join(", ")}`
+          )
           .join("\n\n")}`
       );
     }
   }, [data]);
-  
 
   // Telefon raqam qatorini qo'shish
   const addPhoneNumberRow = () => {
@@ -155,6 +171,28 @@ const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default p
       alert(
         "Iltimos, barcha kerakli maydonlarni to'ldiring va Summa uchun raqam kiriting."
       );
+      return;
+    }
+
+    // Telefon raqamni tekshirish
+    const existingCustomer = data.find((item) =>
+      item.phoneNumbers.some(
+        (phoneNumber) => phoneNumber.number === newItem.phoneNumbers[0].number
+      )
+    );
+
+    // Agar telefon raqam mavjud bo'lsa, xabarni chiqar
+    if (existingCustomer) {
+      alert(
+        `Bu telefon raqami allaqachon "${
+          existingCustomer.name
+        }" mijoziga tegishli.\nIsm: ${existingCustomer.name}\nManzil: ${
+          existingCustomer.manzil
+        }\nTelefon raqam: ${existingCustomer.phoneNumbers
+          .map((phone) => phone.number)
+          .join(", ")}`
+      );
+
       return;
     }
 
@@ -272,46 +310,61 @@ const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default p
     return index + 1;
   };
 
+  // Kategoriya qo'shish
+  const addCategory = (category) => {
+    if (!categories.includes(category)) {
+      setCategories([...categories, category]);
+    }
+  };
+
   // Kategoriya tanlash
   const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    handleSearch(searchQuery);
+    if (category === "add") {
+      const newCategory = prompt("Yangi kategoriya nomini kiriting:");
+      if (newCategory) {
+        addCategory(newCategory);
+        setSelectedCategory(newCategory);
+        handleSearch(searchQuery);
+      }
+    } else {
+      setSelectedCategory(category);
+      handleSearch(searchQuery);
+    }
   };
 
   return (
     <div className="container">
-   <div className="container header-top">
-  <div className="search-language-container">
-    <input
-      type="search"
-      placeholder="Qidiruv..."
-      value={searchQuery}
-      onChange={(e) => handleSearch(e.target.value)}
-      className="search-input"
-    />
-   
+      {/* Ma'lumotlar qidiruv uchun */}
+      <div className="container header-top">
+        <div className="search-language-container">
+          <input
+            type="search"
+            placeholder="Qidiruv..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
+      </div>
 
-   
-  </div>
-</div>
-
+      {/* Sari sahifa sarlavhasi */}
       <Header />
 
+      {/* Ma'lumotlar */}
       <div className="container">
         <div className="wery-bir-box">
+          {/* Kategoriyalar */}
           <div className="category">
             <h2>Kategoriyalar</h2>
-            <p onClick={() => handleCategorySelect("jobu")}>Jobu</p>
-            <p onClick={() => handleCategorySelect("markaz")}>Markaz</p>
-            <p onClick={() => handleCategorySelect("qorliq")}>Qorliq</p>
-            <p onClick={() => handleCategorySelect("marmin")}>Marmin</p>
-            <p onClick={() => handleCategorySelect("savxoz")}>Savxoz</p>
-            <p onClick={() => handleCategorySelect("mo'minqul")}>Mo'minqul</p>
-            <p onClick={() => handleCategorySelect("chep")}>Chep</p>
-            <p onClick={() => handleCategorySelect("ipoq")}>Ipoq</p>
-            <p onClick={() => handleCategorySelect("")}>Barchasi</p>
+            {categories.map((category, index) => (
+              <p key={index} onClick={() => handleCategorySelect(category)}>
+                {category}
+              </p>
+            ))}
+            <p onClick={() => handleCategorySelect("add")}>+ Qo'shish</p>
           </div>
 
+          {/* Ma'lumotlar jadvali */}
           <div className="table-big-box">
             <div className="search__box">
               <h2 className="total-sum">
@@ -341,234 +394,121 @@ const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default p
                 </tr>
                 {visibleData.map((item, index) => (
                   <tr
-  key={item.id}
-  style={{
-    backgroundColor:
-      showModal || item.id === itemToDeleteId
-        ? "#9395D3"
-        : new Date(item.returnedTime) > new Date()
-        ? "white" // If return time hasn't passed
-        : "#FF8E8E", // If return time has passed
-    color:
-      new Date(item.returnedTime) < new Date() ? "white" : "black", // If return time has passed, change text color to white
-  }}
->
-    <td data-th="ID">{index + 1}</td>
-    <td data-th="Ism">
-      <div>
-        <span className="ism">{item.name}</span>
-      </div>
-    </td>
-    <td data-th="Summa">
-      <div>
-        <p>{item.summa.toLocaleString("uz-UZ")} so'm</p>
-      </div>
-    </td>
-    <td data-th="Manzil">
-      <div>
-        <p>{item.manzil}</p>
-      </div>
-    </td>
-    <td data-th="Berilish vaqt">
-      {formatDate(new Date(item.userProvidedTime))},{" "}
-      {new Date(item.userProvidedTime).getFullYear()} yil, soat{" "}
-      {new Date(item.userProvidedTime).toLocaleTimeString(
-        "uz-UZ",
-        {
-          hour: "numeric",
-          minute: "numeric",
-        }
-      )}
-    </td>
-    <td data-th="Qaytarilish vaqti">
-      {formatDate(new Date(item.returnedTime))},{" "}
-      {new Date(item.returnedTime).getFullYear()} yil, soat{" "}
-      {new Date(item.returnedTime).toLocaleTimeString("uz-UZ", {
-        hour: "numeric",
-        minute: "numeric",
-      })}
-    </td>
-    <td
-      data-th="Telefon raqamlar"
-      className="telefon-raqam"
-      style={{ display: "flex", flexDirection: "column" }}
-    >
-      {item.phoneNumbers.map((phoneNumber) => (
-        <div key={phoneNumber.id}>
-          <input
-            className="telefon-raqam-inp"
-            type="text"
-            readOnly
-            placeholder="Telefon raqam"
-            value={phoneNumber.number}
-            onChange={(e) => {
-              const updatedNumbers = newItem.phoneNumbers.map(
-                (num) =>
-                  num.id === phoneNumber.id
-                    ? { ...num, number: e.target.value }
-                    : num
-              );
-              setNewItem({
-                ...newItem,
-                phoneNumbers: updatedNumbers,
-              });
-            }}
-          />
-          {showModal && (
-            <button
-              onClick={() =>
-                handleRemovePhoneNumber(phoneNumber.id)
-              }
-            >
-              Olib tashlash
-            </button>
-          )}
-        </div>
-      ))}
-    </td>
-
-    <td className="ammallar-box" data-th="Amallar">
-      {" "}
-      <button
-        className="ammalar-btn"
-        onClick={() => handleEdit(item.id)}
-      >
-        <i className="fas fa-edit"></i> ✏️
-      </button>
-      <button
-        className="ammalar-btn"
-        onClick={() => handleDelete(item.id)}
-      >
-        <i className="fas fa-trash-alt"></i> ✅
-      </button>
-    </td>
-  </tr>
-))}
-
+                    key={item.id}
+                    style={{
+                      backgroundColor:
+                        selectedCategory === item.manzil
+                          ? "#FFFFFF"
+                          : showModal || item.id === itemToDeleteId
+                          ? "#9395D3"
+                          : new Date(item.returnedTime) > new Date()
+                          ? "white"
+                          : "#FF8E8E",
+                      color:
+                        new Date(item.returnedTime) < new Date()
+                          ? "white"
+                          : "black",
+                    }}
+                  >
+                    <td data-th="N/O">{index + 1}</td>
+                    <td data-th="Ism">{item.name}</td>
+                    <td data-th="Summa">{item.summa}</td>
+                    <td data-th="Manzil">{item.manzil}</td>
+                    <td data-th="Berilish vaqt">
+                      {formatDate(new Date(item.userProvidedTime))}
+                    </td>
+                    <td data-th="Qaytarilish vaqti">
+                      {formatDate(new Date(item.returnedTime))}
+                    </td>
+                    <td data-th="Telefon raqam">
+                      {item.phoneNumbers.map((phone, index) => (
+                        <p key={index}>{phone.number}</p>
+                      ))}
+                    </td>
+                    <td data-th="Amallar">
+                      <button onClick={() => handleEdit(item.id)}>Tahrir</button>
+                      <button onClick={() => handleDelete(item.id)}>O'chirish</button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-      
-{showModal && (
-  <div className="modal">
-    <div className="modal-content">
-      <span className="close" onClick={() => setShowModal(false)}>
-        &times;
-      </span>
-      <label>Ism:</label>
-      <input
-        type="text"
-        value={newItem.name}
-        maxLength={40}
-        onChange={(e) =>
-          setNewItem({ ...newItem, name: e.target.value })
-        }
-      />
-      <label>Summa:</label>
-      <input
-        type="number"
-        value={newItem.summa}
-        onChange={(e) =>
-          setNewItem({ ...newItem, summa: e.target.value })
-        }
-      />
-      <label>Manzil</label>
-      <input
-        type="text"
-        value={newItem.manzil}
-        maxLength={40}
-        onChange={(e) =>
-          setNewItem({ ...newItem, manzil: e.target.value })
-        }
-      />
-      <label>Berilish vaqti:</label>
-      <DatePicker
-        className="vaqt"
-        placeholderText="Sana tanlang"
-        selected={newItem.userProvidedTime}
-        onChange={(date) =>
-          setNewItem({ ...newItem, userProvidedTime: date })
-        }
-        locale="uz" // O'zbek tilida
-      />
-      <label>Qaytarilish vaqti:</label>
-      <DatePicker
-        className="vaqt"
-        placeholderText="Sana tanlang"
-        selected={newItem.returnedTime}
-        onChange={(date) =>
-          setNewItem({ ...newItem, returnedTime: date })
-        }
-        locale="uz" // O'zbek tilida
-      />
-      <div>
-        {newItem.phoneNumbers.map((phoneNumber) => (
-          <div className="modal__buttons-box" key={phoneNumber.id}>
-            <PhoneInput
-              placeholder="Telefon raqam"
-              className="telefon-raqam-kiritish"
-              value={phoneNumber.number}
-              onChange={(value) => {
-                const updatedNumbers = newItem.phoneNumbers.map(
-                  (num) =>
-                    num.id === phoneNumber.id
-                      ? { ...num, number: value }
-                      : num
-                );
-                setNewItem({
-                  ...newItem,
-                  phoneNumbers: updatedNumbers,
-                });
-              }}
-            />
-            {showModal && (
-              <button
-                onClick={() =>
-                  handleRemovePhoneNumber(phoneNumber.id)
-                }
-              >
-                Telefon raqamni Olib tashlash ➖
-              </button>
-              
-            )}
           </div>
-        ))}
-        <button onClick={addPhoneNumberRow}>
-          Telefon raqam qo'shish 📞 ➕
-        </button>
-      </div>
-      {editingItemId ? (
-        <div className="modal__buttons-row">
-          <button onClick={handleSaveEdit}>Tahrirni saqlash</button>
-          <button onClick={() => setShowModal(false)}>
-            Bekor qilish
-          </button>
         </div>
-      ) : (
-        <div className="modal__buttons-row">
-          <button onClick={handleAdd}>Saqlash ✅</button>
-          <button onClick={() => setShowModal(false)}>
-            Bekor qilish
-          </button>
+      </div>
+
+      {/* Modal oynasi */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setShowModal(false)}>
+              &times;
+            </span>
+            {/* Modal ichidagi kontent */}
+            <h2>Yangi ma'lumot qo'shish</h2>
+            <input
+              type="text"
+              value={newItem.name}
+              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+              placeholder="Ism"
+            />
+            <input
+              type="text"
+              value={newItem.summa}
+              onChange={(e) => setNewItem({ ...newItem, summa: e.target.value })}
+              placeholder="Summa"
+            />
+            <input
+              type="text"
+              value={newItem.manzil}
+              onChange={(e) => setNewItem({ ...newItem, manzil: e.target.value })}
+              placeholder="Manzil"
+            />
+            <DatePicker
+              selected={newItem.userProvidedTime}
+              onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
+              placeholderText="Berilish vaqti"
+            />
+            <DatePicker
+              selected={newItem.returnedTime}
+              onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
+              placeholderText="Qaytarilish vaqti"
+            />
+            {newItem.phoneNumbers.map((phone, index) => (
+              <div key={phone.id}>
+                <PhoneInput
+                  placeholder="Telefon raqam"
+                  value={phone.number}
+                  onChange={(number) => {
+                    const updatedPhoneNumbers = [...newItem.phoneNumbers];
+                    updatedPhoneNumbers[index].number = number;
+                    setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
+                  }}
+                />
+                <button onClick={() => handleRemovePhoneNumber(phone.id)}>
+                  O'chirish
+                </button>
+              </div>
+            ))}
+            <button onClick={handleAdd}>Qo'shish</button>
+            <button onClick={handleSaveEdit}>Saqlash</button>
+          </div>
         </div>
       )}
-    </div>
-  </div>
-)}
 
-            {showDeleteConfirmation && (
-              <div className="delete-confirmation-modal">
-                <div className="delete-confirmation-content">
-                  <p>Rostan ham o'chirmoqchimisiz?</p>
-                  <div>
-                    <button onClick={confirmDelete}>Ha</button>
-                    <button onClick={cancelDelete}>Yo'q</button>
-                  </div>
-                </div>
-              </div>
-            )}
+      {/* O'chirishni tasdiqlash modal oynasi */}
+      {showDeleteConfirmation && (
+        <div className="delete-confirmation-modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeDeleteConfirmationModal}>
+              &times; 
+            </span>
+            <p>Haqiqatan ham ushbu ma'lumotni o'chirmoqchimisiz?</p>
+            <button onClick={confirmDelete}>Ha</button>
+            <button onClick={cancelDelete}>Yo'q</button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
