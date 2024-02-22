@@ -1,3 +1,6 @@
+import { MdOutlineModeEdit, MdOutlineDelete } from "react-icons/md";
+import { IoAddCircle } from "react-icons/io5";
+
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,11 +11,10 @@ import { Link } from "react-router-dom";
 import Header from "../../layout/Header";
 
 const Home = () => {
-  // Komponent holati uchun muhim holatlar
-  const [data, setData] = useState([]); // Barcha ma'lumotlar
-  const [showModal, setShowModal] = useState(false); // Modal oynani ko'rsatish/yo'q qilish
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // O'chirishni tasdiqlash oynani ko'rsatish/yo'q qilish
-  const [newItem, setNewItem] = useState({ // Yangi ma'lumot qo'shish uchun
+  const [data, setData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [newItem, setNewItem] = useState({
     name: "",
     summa: "",
     userProvidedTime: new Date(),
@@ -20,13 +22,13 @@ const Home = () => {
     manzil: "",
     phoneNumbers: [{ id: 1, number: "" }],
   });
-  const [editingItemId, setEditingItemId] = useState(null); // Tahrir qilayotgan elementning ID-si
-  const [itemToDeleteId, setItemToDeleteId] = useState(null); // O'chirilayotgan elementning ID-si
-  const [searchQuery, setSearchQuery] = useState(""); // Qidiruv so'rovi
-  const [visibleData, setVisibleData] = useState([]); // Ko'rsatilayotgan ma'lumotlar
-  const [selectedCategory, setSelectedCategory] = useState(""); // Tanlangan kategoriya
-  const [selectedLanguage, setSelectedLanguage] = useState("uz"); // Default language is "O'zbekcha"
-  const [selectedProfile, setSelectedProfile] = useState("profile1"); // Default profile is "Profil 1"
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [itemToDeleteId, setItemToDeleteId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [visibleData, setVisibleData] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("uz");
+  const [selectedProfile, setSelectedProfile] = useState("profile1");
   const [categories, setCategories] = useState([
     "jobu",
     "markaz",
@@ -38,7 +40,6 @@ const Home = () => {
     "ipoq",
   ]);
 
-  // O'zbek tilidagi hafta kuni va oy nomlari
   const daysInUzbek = [
     "Yakshanba",
     "Dushanba",
@@ -63,7 +64,6 @@ const Home = () => {
     "Dekabr",
   ];
 
-  // Sanani O'zbek tiliga formatlash
   const formatDate = (date) => {
     const day = daysInUzbek[date.getDay()];
     const month = monthsInUzbek[date.getMonth()];
@@ -71,14 +71,12 @@ const Home = () => {
     return formattedDate;
   };
 
-  // Ma'lumotlarni olish vaqtida ishga tushadigan effekt
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("yourDataKey")) || [];
     setData(storedData);
     setVisibleData(storedData);
   }, []);
 
-  // Ma'lumotlarga qaytarilish vaqti yetib o'tganlar bo'yicha bildirishnoma chiqarish
   useEffect(() => {
     const now = new Date();
     const itemsWithDueDate = data.filter((item) => {
@@ -102,7 +100,6 @@ const Home = () => {
     }
   }, [data]);
 
-  // Telefon raqam qatorini qo'shish
   const addPhoneNumberRow = () => {
     const newId =
       newItem.phoneNumbers.length > 0
@@ -115,7 +112,6 @@ const Home = () => {
     });
   };
 
-  // Jami summani hisoblash
   const calculateTotalSum = () => {
     let totalSum = 0;
     data.forEach((item) => {
@@ -127,7 +123,6 @@ const Home = () => {
     });
   };
 
-  // Ma'lumotni o'chirish
   const handleDelete = (id) => {
     if (!showDeleteConfirmation && !editingItemId) {
       setItemToDeleteId(id);
@@ -135,7 +130,6 @@ const Home = () => {
     }
   };
 
-  // O'chirishni tasdiqlash
   const confirmDelete = () => {
     if (itemToDeleteId !== null) {
       const updatedData = data.filter((item) => item.id !== itemToDeleteId);
@@ -149,19 +143,16 @@ const Home = () => {
     }
   };
 
-  // O'chirishni bekor qilish
   const cancelDelete = () => {
     setShowDeleteConfirmation(false);
     setItemToDeleteId(null);
   };
 
-  // O'chirishni tasdiqlash oynasini yopish
   const closeDeleteConfirmationModal = () => {
     setShowDeleteConfirmation(false);
     setItemToDeleteId(null);
   };
 
-  // Ma'lumot qo'shish
   const handleAdd = () => {
     if (
       newItem.name.trim() === "" ||
@@ -174,14 +165,12 @@ const Home = () => {
       return;
     }
 
-    // Telefon raqamni tekshirish
     const existingCustomer = data.find((item) =>
       item.phoneNumbers.some(
         (phoneNumber) => phoneNumber.number === newItem.phoneNumbers[0].number
       )
     );
 
-    // Agar telefon raqam mavjud bo'lsa, xabarni chiqar
     if (existingCustomer) {
       alert(
         `Bu telefon raqami allaqachon "${
@@ -223,7 +212,6 @@ const Home = () => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  // Ma'lumotni tahrirlash
   const handleEdit = (id) => {
     const itemToEdit = data.find((item) => item.id === id);
 
@@ -238,7 +226,6 @@ const Home = () => {
     setShowModal(true);
   };
 
-  // Telefon raqamni o'chirish
   const handleRemovePhoneNumber = (phoneNumberId) => {
     if (showModal) {
       const updatedPhoneNumbers = newItem.phoneNumbers.filter(
@@ -251,7 +238,6 @@ const Home = () => {
     }
   };
 
-  // Tahrir qilayotgan ma'lumotni saqlash
   const handleSaveEdit = () => {
     newItem.summa = parseFloat(newItem.summa);
 
@@ -278,7 +264,6 @@ const Home = () => {
     localStorage.setItem("yourDataKey", JSON.stringify(updatedData));
   };
 
-  // Qidiruv
   const handleSearch = (query) => {
     setSearchQuery(query);
     const filteredData = data.filter(
@@ -292,7 +277,6 @@ const Home = () => {
     setVisibleData(rearrangeData(filteredData).slice(0, 10));
   };
 
-  // Ma'lumotlarni qayta tuzish
   const rearrangeData = (data) => {
     const newData = [];
     const idMap = {};
@@ -305,19 +289,21 @@ const Home = () => {
     return newData;
   };
 
-  // ID generatsiyalash
   const generateId = (index) => {
     return index + 1;
   };
 
-  // Kategoriya qo'shish
   const addCategory = (category) => {
     if (!categories.includes(category)) {
       setCategories([...categories, category]);
     }
   };
 
-  // Kategoriya tanlash
+  const removeCategory = (category) => {
+    const updatedCategories = categories.filter((cat) => cat !== category);
+    setCategories(updatedCategories);
+  };
+
   const handleCategorySelect = (category) => {
     if (category === "add") {
       const newCategory = prompt("Yangi kategoriya nomini kiriting:");
@@ -325,6 +311,17 @@ const Home = () => {
         addCategory(newCategory);
         setSelectedCategory(newCategory);
         handleSearch(searchQuery);
+      }
+    } else if (category === "delete") {
+      const categoryToDelete = prompt(
+        "O'chirmoqchi bo'lgan kategoriyani kiriting:"
+      );
+      if (categoryToDelete && categories.includes(categoryToDelete)) {
+        removeCategory(categoryToDelete);
+        setSelectedCategory("");
+        handleSearch(searchQuery);
+      } else {
+        alert("Kategoriya topilmadi yoki mavjud emas.");
       }
     } else {
       setSelectedCategory(category);
@@ -334,7 +331,6 @@ const Home = () => {
 
   return (
     <div className="container">
-      {/* Ma'lumotlar qidiruv uchun */}
       <div className="container header-top">
         <div className="search-language-container">
           <input
@@ -347,13 +343,10 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Sari sahifa sarlavhasi */}
       <Header />
 
-      {/* Ma'lumotlar */}
       <div className="container">
         <div className="wery-bir-box">
-          {/* Kategoriyalar */}
           <div className="category">
             <h2>Kategoriyalar</h2>
             {categories.map((category, index) => (
@@ -362,9 +355,9 @@ const Home = () => {
               </p>
             ))}
             <p onClick={() => handleCategorySelect("add")}>+ Qo'shish</p>
+            <p onClick={() => handleCategorySelect("delete")}>- O'chirish</p>
           </div>
 
-          {/* Ma'lumotlar jadvali */}
           <div className="table-big-box">
             <div className="search__box">
               <h2 className="total-sum">
@@ -377,7 +370,7 @@ const Home = () => {
                 className="add__button"
                 onClick={() => setShowModal(true)}
               >
-                ➕ Qo'shish
+                <IoAddCircle /> Qo'shish
               </button>
             </div>
             <table className="rwd-table">
@@ -426,8 +419,18 @@ const Home = () => {
                       ))}
                     </td>
                     <td data-th="Amallar">
-                      <button onClick={() => handleEdit(item.id)}>Tahrir</button>
-                      <button onClick={() => handleDelete(item.id)}>O'chirish</button>
+                      <button
+                        className="edit__button"
+                        onClick={() => handleEdit(item.id)}
+                      >
+                        <MdOutlineModeEdit />
+                      </button>
+                      <button
+                        className="delete__button"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        <MdOutlineDelete />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -437,75 +440,98 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Modal oynasi */}
       {showModal && (
+  <div className="modal">
+    <div className="modal-content">
+      <div className="modal-header">
+        <span className="close" onClick={() => setShowModal(false)}>
+          &times;
+        </span>
+        <p className="modal-title">Yangi ma'lumot qo'shish</p>
+      </div>
+      <div className="modal-body">
+        <div className="input-row">
+          <input
+            type="text"
+            placeholder="Ism"
+            value={newItem.name}
+            onChange={(e) =>
+              setNewItem({ ...newItem, name: e.target.value })
+            }
+          />
+          <input
+            type="text"
+            placeholder="Summa"
+            value={newItem.summa}
+            onChange={(e) =>
+              setNewItem({ ...newItem, summa: e.target.value })
+            }
+          />
+        </div>
+        <div className="input-row">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="">Kategoriya tanlang</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          {/* Assuming PhoneInput needs phoneNumber */}
+          <PhoneInput
+            placeholder="Telefon raqam"
+            value={newItem.phoneNumber} // Or wherever phoneNumber is coming from
+            onChange={(value) => setNewItem({ ...newItem, phoneNumber: value })}
+          />
+        </div>
+        <div className="input-row">
+          <DatePicker
+            selected={newItem.userProvidedTime}
+            onChange={(date) =>
+              setNewItem({ ...newItem, userProvidedTime: date })
+            }
+          />
+          <DatePicker
+            selected={newItem.returnedTime}
+            onChange={(date) =>
+              setNewItem({ ...newItem, returnedTime: date })
+            }
+          />
+        </div>
+        {newItem.phoneNumbers.map((phoneNumber, index) => (
+          <div className="input-row" key={index}>
+           
+          </div>
+        ))}
+       
+        {editingItemId !== null ? (
+          <button onClick={handleSaveEdit}>Saqlash</button>
+        ) : (
+          <button onClick={handleAdd}>Qo'shish</button>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
+
+      {showDeleteConfirmation && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowModal(false)}>
+            <span className="close" onClick={closeDeleteConfirmationModal}>
               &times;
             </span>
-            {/* Modal ichidagi kontent */}
-            <h2>Yangi ma'lumot qo'shish</h2>
-            <input
-              type="text"
-              value={newItem.name}
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-              placeholder="Ism"
-            />
-            <input
-              type="text"
-              value={newItem.summa}
-              onChange={(e) => setNewItem({ ...newItem, summa: e.target.value })}
-              placeholder="Summa"
-            />
-            <input
-              type="text"
-              value={newItem.manzil}
-              onChange={(e) => setNewItem({ ...newItem, manzil: e.target.value })}
-              placeholder="Manzil"
-            />
-            <DatePicker
-              selected={newItem.userProvidedTime}
-              onChange={(date) => setNewItem({ ...newItem, userProvidedTime: date })}
-              placeholderText="Berilish vaqti"
-            />
-            <DatePicker
-              selected={newItem.returnedTime}
-              onChange={(date) => setNewItem({ ...newItem, returnedTime: date })}
-              placeholderText="Qaytarilish vaqti"
-            />
-            {newItem.phoneNumbers.map((phone, index) => (
-              <div key={phone.id}>
-                <PhoneInput
-                  placeholder="Telefon raqam"
-                  value={phone.number}
-                  onChange={(number) => {
-                    const updatedPhoneNumbers = [...newItem.phoneNumbers];
-                    updatedPhoneNumbers[index].number = number;
-                    setNewItem({ ...newItem, phoneNumbers: updatedPhoneNumbers });
-                  }}
-                />
-                <button onClick={() => handleRemovePhoneNumber(phone.id)}>
-                  O'chirish
-                </button>
-              </div>
-            ))}
-            <button onClick={handleAdd}>Qo'shish</button>
-            <button onClick={handleSaveEdit}>Saqlash</button>
-          </div>
-        </div>
-      )}
-
-      {/* O'chirishni tasdiqlash modal oynasi */}
-      {showDeleteConfirmation && (
-        <div className="delete-confirmation-modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeDeleteConfirmationModal}>
-              &times; 
-            </span>
-            <p>Haqiqatan ham ushbu ma'lumotni o'chirmoqchimisiz?</p>
-            <button onClick={confirmDelete}>Ha</button>
-            <button onClick={cancelDelete}>Yo'q</button>
+            <h2>O'chirishni tasdiqlang</h2>
+            <p>Rostan ham bu elementni o'chirmoqchimisiz?</p>
+            <button className="delete__button" onClick={confirmDelete}>
+              Ha
+            </button>
+            <button className="edit__button" onClick={cancelDelete}>
+              Yo'q
+            </button>
           </div>
         </div>
       )}

@@ -161,6 +161,9 @@
   
   /* Mobil qurilmalar uchun media qo'yma */
   @media screen and (max-width: 990px) {
+    .add__button{
+      width: 100% !important;
+    }
     .menu-icon {
       display: block; /* Mobilda menyu ikonini ko'rsatish */
       position: absolute;

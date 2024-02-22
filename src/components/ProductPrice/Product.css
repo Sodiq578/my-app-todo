@@ -528,7 +528,7 @@ h3:after {
 
 /* Additional Table Styles */
 td button {
-  background-color: #4c63af;
+  background-color: #4caf70;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -555,18 +555,7 @@ input[type="number"] {
   background-color: #f8f8f8;
 }
 
-/* Additional Button Styles */
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 16px;
-}
+
 
 button:hover {
   background-color: #45a049;
@@ -778,9 +767,6 @@ button{
 
 
 
-.modal-content input {
-  margin-bottom: 10px;
-}
 
 .close {
   color: #aaa;
@@ -923,16 +909,6 @@ height: 50px;
   color: white;
   margin: 15% 0;
 }
-
-
-.category p:hover {
-  color: black; /* Change text color to black on hover */
-  background-color: white; /* Change background color to white on hover */
-}
-
-.category p:active {
-  background-color: rgb(252, 247, 247); /* Change background color to red when active */
-}
 /* Media query for responsiveness */
 @media screen and (max-width: 768px) {
   .container {
@@ -940,6 +916,10 @@ height: 50px;
     flex-direction: column;
     align-items: center;
   }
+
+.flex-btn{
+  display: flex !important;
+}
 }
  /* kategoraylar degan button bo'lsin button bosilganda modal chiqsin ko'rinsin modalni ichida manzilalr bo'lsin qorliq jobu iopq oqratepa markaz  qaysi manzil bosilsa shu malumto bilan kiritilsgan malumotlar korinisn bosigladan keyin malumot searchga yuborilsin searchdan izlansin qidirilsin va shu malumotlar ko'rinsin */
 
@@ -1017,7 +997,8 @@ height: 50px;
 
 
 .table-big-box{
-  width: 90% !important;
+  width: 100% !important;
+  margin: 0;
 }
 
 
@@ -1122,16 +1103,7 @@ input[type="number"]:focus {
 }
 
 /* Boshqa stilizatsiya */
-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: auto;
-}
+
 
 button:hover {
   background-color: #45a049;
@@ -1147,6 +1119,7 @@ button.cancelbtn {
 /* Boshqa stilizatsiya */
 .container {
   padding: 16px;
+  width: 90%;
 }
 
 /* Boshqa stilizatsiya */
@@ -1269,23 +1242,6 @@ mark {
   margin-top: calc(var(--size-bezel) * 2.5);
 }
 
-button {
-  color: currentColor;
-  padding: var(--size-bezel) calc(var(--size-bezel) * 2);
-  background: var(--color-accent);
-  border: none;
-  border-radius: var(--size-radius);
-  font-weight: 900;
-  
-  &[type=reset]{
-    background: var(--color-background);
-    font-weight: 200;
-  } 
-}
-
-button + button {
-  margin-left: calc(var(--size-bezel) * 2);
-}
 
 .icon {
   display: inline-block;
@@ -1333,141 +1289,195 @@ button + button {
   background-color: #ddd; /* Hover bo'lganda orqa fon rangi */
 }
 
-/* Home.css */
 
-/* Global styles */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.modal-content {
+  width: 80%; /* Adjust the width as needed */
+  max-width: 600px; /* Set maximum width if necessary */
+  background-color: #fefefe;
+  margin: 15% auto; /* Center the modal vertically and horizontally */
   padding: 20px;
+  border: 1px solid #888;
+  border-radius: 10px;
+  position: relative;
 }
 
-/* Header styles */
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+/* Add responsive styles */
+@media screen and (max-width: 768px) {
+  .modal-content {
+    width: 90%; /* Adjust the width for smaller screens */
+  }
 }
 
-.search-language-container {
-  flex: 1;
+@media screen and (max-width: 480px) {
+  .modal-content {
+    width: 95%; /* Adjust the width for even smaller screens */
+  }
 }
 
-.search-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* Category styles */
-.category {
-  width: 99%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.category h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.category p {
-  font-size: 16px;
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-
-.category p:hover {
-  background-color: #f0f0f0;
-}
-
-/* Table styles */
-
-
-.total-sum {
-  margin-bottom: 10px;
-}
-
-.add__button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.add__button:hover {
-  background-color: #0056b3;
-}
-
-.rwd-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.rwd-table th,
-.rwd-table td {
-  padding: 10px;
-  border: 1px solid #ccc;
-}
-
-.rwd-table th {
-  background-color: #f2f2f2;
-}
-
-.rwd-table td {
-  text-align: center;
-}
 
 /* Modal styles */
 .modal {
-  position: fixed;
-  top: 0;
+  display: block; /* Show the modal */
+  position: fixed; /* Fixed position */
+  z-index: 1; /* Place modal on top of other elements */
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: auto; /* Enable scrolling if needed */
+  background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
 }
 
+/* Modal content styles */
 .modal-content {
-  background-color: white;
+  width: 80%; /* Modal width */
+  max-width: 600px; /* Maximum modal width */
+  background-color: #fefefe;
+  margin: 15% auto; /* Centering modal vertically and horizontally */
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding box shadow */
 }
 
+/* Modal header styles */
+.modal-header {
+  border-bottom: 1px solid #ccc; /* Adding border bottom */
+  padding-bottom: 10px; /* Adding padding bottom */
+}
+
+/* Close button styles */
 .close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  color: black;
+  float: right;
   font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-/* Delete confirmation modal styles */
-.delete-confirmation-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.close:hover {
+  color: #000;
 }
 
-/* Additional styles can be added as needed */
+/* Modal title styles */
+.modal-title {
+  font-size: 18px;
+  margin: 0;
+  color: #333;
+}
+
+/* Modal body styles */
+.modal-body {
+  margin-top: 15px; /* Adding margin top */
+}
+
+/* Input row styles */
+.input-row {
+  display: flex;
+  margin-bottom: 10px; /* Adding margin bottom */
+}
+
+/* Input styles */
+.input-row input,
+.input-row select {
+  flex: 1; /* Take up remaining space */
+  margin-right: 10px; /* Adding margin between inputs */
+}
+
+/* Remove phone number button styles */
+.remove-phone-number {
+  background-color: #f44336; /* Red color */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.remove-phone-number:hover {
+  background-color: #d32f2f; /* Darker red color on hover */
+}
+
+/* Add phone number button styles */
+button {
+  background-color: #4caf50; /* Green color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px; /* Adding padding */
+  cursor: pointer;
+  margin-top: 10px; /* Adding margin top */
+}
+
+button:hover {
+  background-color: #45a049; /* Darker green color on hover */
+}
+
+
+.modal-body {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.input-row {
+  flex: 1 1 50%; /* Two columns layout for large screens */
+  margin-bottom: 10px;
+}
+
+/* Adjust input and select elements */
+.input-row input,
+.input-row select {
+  width: calc(100% - 10px); /* Adjust input width */
+  margin-right: 10px; /* Add space between inputs */
+}
+
+/* Style the remove phone number button */
+.remove-phone-number {
+  background-color: #f44336; /* Red color */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+  margin-left: 5px; /* Add margin between button and input */
+}
+
+.remove-phone-number:hover {
+  background-color: #d32f2f; /* Darker red color on hover */
+}
+
+/* Style the add phone number button */
+button {
+  /* your existing styles */
+}
+
+button:hover {
+  /* your existing styles */
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+  .input-row {
+    flex: 1 1 100%; /* Full width for smaller screens */
+  }
+
+  .modal-content input{
+    height: 50px;
+    width: 100px;
+  }
+
+  td button{
+width: 100%;
+
+  }
+
+  .input-row button{
+    background-color: red !important;
+  }
+}
